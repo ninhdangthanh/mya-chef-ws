@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  myachef:
+    image: 'myachef:latest'
+    container_name: myachef
+    restart: 'on-failure:5'
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8989:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.100.9:3306/myachef_dev?useSSL=false
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=slsZ1XmB
+      - TZ=Asia/Ho_Chi_Minh
+      - DEBIAN_FRONTEND=noninteractive
+    volumes:
+#      - ./addy-ws/target/:/app/addy-ws/target/
+      - ../images:/home/admin/applications/myachef/dev/storage/myachef
+    networks:
+      - myachef_network
+    
+networks:
+  myachef_network:    
+    external: true
+    
+volumes:
+  data:
+    driver: local

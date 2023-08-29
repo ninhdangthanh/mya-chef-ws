@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Addy.vn - Nâng tầm hiệu quả doanh nghiệp</title>
+    </head>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+    </style>
+    <body
+        style="
+            width: 500px;
+            position: relative;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 5px auto;
+            font-family: Roboto, sans-serif;
+            box-shadow: 0px 0px 67px rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+        "
+    >
+        <div style="width: 500px; margin: 0 auto">
+            <div
+                style="
+                    width: 500px;
+                    height: 100px;
+                    border-top-left-radius: 14px;
+                    border-top-right-radius: 14px;
+                    display: flex;
+                "
+            >
+                <div>
+                    <img style="width: 100%" src="cid:header" />
+                </div>
+            </div>
+         
+            <div style="width: 500px; display: flex">
+                <div
+                    style="
+                        width: 500px;
+                        text-align: center;
+                        font-size: 14px;
+                        display: flex;
+                    "
+                >
+                    <div style="width: 100%; margin: 0 0 30px 0">
+                        <h1
+                            style="
+                                font-size: 22px;
+                                color: #4F4F4F;
+                                text-align: center;
+                                margin: 30px 0 20px 0;
+                                font-weight: bolder;
+                            "
+                        >
+                            Xin chào ${name},
+                        </h1>
+                        <p
+                            style="
+                                line-height: 20px;
+                                font-family: Roboto, sans-serif;
+                                font-weight: 400;
+                                text-align: center;
+                                max-width: 400px;
+                                margin: 0 auto;
+                            "
+                        >
+                            Cảm ơn bạn đã đăng ký sử dụng phần mềm CRM - quản lí
+                            và chăm sóc khách hàng của chúng tôi.
+                        </p>
+                        <div
+                            style="
+                                display: block;
+                                text-align: center;
+                                margin-top: 20px;
+                            "
+                        >
+                            <a
+                                href="${url}"
+                                style="
+                                    font-family: Roboto, sans-serif;
+                                    border-radius: 30px;
+                                    text-decoration: none;
+                                    padding: 12px 22px;
+                                    background-color: #10213D;
+                                    color: #FFE073;
+                                    font-weight: 600;
+                                "
+                            >
+                                Xác Nhận Tài Khoản
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                style="
+                    width: 500px;
+                    text-align: center;
+                    color: #4F4F4F;
+                    padding: 0 0 25px 0;
+                    border-bottom-left-radius: 14px;
+                    border-bottom-right-radius: 14px;
+                    font-size: 14px;
+                    font-weight: 400;
+                "
+            >
+                <h3 style="margin: 0; margin-top: 20px; text-align: center">
+                    CTY TNHH GIẢI PHÁP SỐ THÔNG MINH
+                </h3>
+                <p
+                    style="
+                        text-align: center;
+                        margin-bottom: 15px;
+                        line-height: 14px;
+                    "
+                >
+                    60B Thích Bửu Đăng, phường 1, quận Gò Vấp, TP HCM
+                </p>
+                <p
+                    style="
+                        text-align: center;
+                        margin-bottom: 15px;
+                        line-height: 14px;
+                    "
+                >
+                    Hotline: <b>0911119009</b> | Email:
+                    <b
+                        ><a href="mailto:support@addy.vn" target="_blank"
+                            >support@addy.vn</a
+                        ></b
+                    >
+                </p>
+                <div style="width: 100%; text-align: center; margin: 0 auto">
+                    <a
+                        href="#m_-3082216046416420532_"
+                        style="text-decoration: none"
+                    >
+                        <img
+                            style="width: 30px; height: 30px"
+                            src="cid:face"
+                        />
+                    </a>
+                    <a
+                        href="#m_-3082216046416420532_"
+                        style="text-decoration: none; margin: 0 10px"
+                    >
+                        <img
+                            style="
+                                border-radius: 50%;
+                                width: 30px;
+                                height: 30px;
+                            "
+                            src="cid:zalo"
+                        />
+                    </a>
+                    <a
+                        href="#m_-3082216046416420532_"
+                        style="text-decoration: none"
+                    >
+                        <img
+                            style="width: 30px; height: 30px"
+                            src="cid:globe"
+                        />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,398 @@
+[
+  {
+    "name": "DASHBOARD",
+    "nameVi": "Tổng quan",
+    "permissions": {
+      "VIEW": true,
+      "CREATE": true,
+      "UPDATE": true,
+      "DELETE": true
+    },
+    "child": null,
+    "display": false
+  },
+  {
+    "name": "TASK",
+    "nameVi": "Công việc",
+    "permissions": {
+      "VIEW": false,
+      "CREATE": false,
+      "UPDATE": false,
+      "DELETE": false
+    },
+    "child": null,
+    "display": false
+  },
+  {
+    "name": "CUSTOMER",
+    "nameVi": "Khách hàng",
+    "permissions": null,
+    "child": [
+      {
+        "name": "LIST",
+        "nameVi": "Danh sách khách hàng",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "GROUP",
+        "nameVi": "Nhóm Khách hàng",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "POTENTIAL_CUSTOMER",
+    "nameVi": "Khách hàng tiềm năng",
+    "permissions": null,
+    "child": [
+      {
+        "name": "LIST",
+        "nameVi": "Danh sách khách hàng tiềm năng",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "GROUP",
+        "nameVi": "Nhóm Khách hàng tiềm năng",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "POST",
+    "nameVi": "Bài viết",
+    "permissions": null,
+    "child": [
+	   {
+        "name": "CREATE",
+        "nameVi": "Thêm mới",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "LIST",
+        "nameVi": "Danh sách bài viết",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "GROUP",
+        "nameVi": "Nhóm bài viết",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "PERSONAL_ZALO_ACCOUNT",
+    "nameVi": "Tài Khoản zalo cá nhân",
+    "permissions": null,
+    "child": [
+      {
+        "name": "ACCOUNT",
+        "nameVi": "Tài khoản",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "MARKETING_CAMPAIGN",
+        "nameVi": "Chiến dịch",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "DESKTOP_CONFIG",
+        "nameVi": "Cấu hình desktop app",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "OA_ZALO_ACCOUNT",
+    "nameVi": "Tài Khoản zalo OA",
+    "permissions": null,
+    "child": [
+      {
+        "name": "ACCOUNT",
+        "nameVi": "Tài khoản",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "BROADCAST",
+        "nameVi": "Tin nhắn broadcast",
+        "permissions": null,
+        "child": [
+		   {
+            "name": "CREATE",
+            "nameVi": "Thêm mới",
+            "permissions": {
+              "VIEW": false,
+              "CREATE": false,
+              "UPDATE": false,
+              "DELETE": false
+            },
+            "child": null,
+            "display": false
+          },
+          {
+            "name": "HISTORY",
+            "nameVi": "Lịch sử",
+            "permissions": {
+              "VIEW": false,
+              "CREATE": false,
+              "UPDATE": false,
+              "DELETE": false
+            },
+            "child": null,
+            "display": false
+          },
+          {
+            "name": "DRAFT",
+            "nameVi": "Nháp",
+            "permissions": {
+              "VIEW": false,
+              "CREATE": false,
+              "UPDATE": false,
+              "DELETE": false
+            },
+            "child": null,
+            "display": false
+          }
+        ],
+        "display": false
+      },
+      {
+        "name": "ZNS",
+        "nameVi": "Tin nhắn zns",
+        "permissions": null,
+        "child": [
+          {
+            "name": "LIST",
+            "nameVi": "Danh sách tin nhắn zns",
+            "permissions": {
+              "VIEW": false,
+              "CREATE": false,
+              "UPDATE": false,
+              "DELETE": false
+            },
+            "child": null,
+            "display": false
+          },
+          {
+            "name": "TEMPLATE",
+            "nameVi": "Mẫu zns",
+            "permissions": {
+              "VIEW": false,
+              "CREATE": false,
+              "UPDATE": false,
+              "DELETE": false
+            },
+            "child": null,
+            "display": false
+          }
+        ],
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "SETTING",
+    "nameVi": "Cấu hình",
+    "permissions": null,
+    "child": [
+      {
+        "name": "EMPLOYEE",
+        "nameVi": "Nhân viên",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "ACCOUNT",
+        "nameVi": "Tài khoản",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "ROLE",
+        "nameVi": "Phân quyền",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "EMAIL",
+        "nameVi": "Cấu hình Email",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "COMPANY",
+        "nameVi": "Công ty",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "BILL",
+    "nameVi": "Billing",
+    "permissions": null,
+    "child": [
+      {
+        "name": "BILL_CUSTOMER",
+        "nameVi": "Danh sách khách hàng",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+	  {
+        "name": "BILL_CLIENT",
+        "nameVi": "Gói dịch vụ đang sử dụng",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      },
+      {
+        "name": "BILL_PACKAGES",
+        "nameVi": "Gói dịch vụ",
+        "permissions": {
+          "VIEW": false,
+          "CREATE": false,
+          "UPDATE": false,
+          "DELETE": false
+        },
+        "child": null,
+        "display": false
+      }
+    ],
+    "display": false
+  },
+  {
+    "name": "SUPPORT_REQUIRED",
+    "nameVi": "Yều cầu hỗ trợ",
+    "permissions": {
+      "VIEW": false,
+      "CREATE": false,
+      "UPDATE": false,
+      "DELETE": false
+    },
+    "child": null,
+    "display": false
+  }
+]

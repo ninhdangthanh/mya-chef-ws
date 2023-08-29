@@ -1,0 +1,9 @@
+*.classpath
+*.class
+*.log
+*/logs/*
+target/
+*.project
+*.settings/
+background-scheduler/newsml/
+myachef-ws/catalina.base_IS_UNDEFINED/*
