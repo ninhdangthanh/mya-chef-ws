@@ -21,11 +21,8 @@ import vn.com.ids.myachef.api.security.jwt.JWTTokenService;
 import vn.com.ids.myachef.api.security.jwt.JwtFilterErrorReponse;
 import vn.com.ids.myachef.api.security.userdetails.UserDetailsImpl;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
-import vn.com.ids.myachef.business.service.CustomerService;
 import vn.com.ids.myachef.business.service.UserService;
-import vn.com.ids.myachef.dao.enums.CustomerStatus;
 import vn.com.ids.myachef.dao.enums.UserStatus;
-import vn.com.ids.myachef.dao.model.CustomerModel;
 import vn.com.ids.myachef.dao.model.UserModel;
 
 @Slf4j
@@ -37,8 +34,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private CustomerService customerService;
+    // @Autowired
+    // private CustomerService customerService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -56,15 +53,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 toJsonResponse(response, jwtErrorReponse);
                 return;
             }
-            
+
             Long userId = jwtTokenService.getUserId(jwtToken);
             UserDetailsImpl userDetails = null;
             if (UserDetailsImpl.CUSTOMER_ROLE.equals(jwtTokenService.getType(jwtToken))) {
-                CustomerModel customerModel = customerService.findOne(userId);
-                if (customerModel == null || customerModel.getStatus() != CustomerStatus.ACTIVE) {
-                    throw new ResourceNotFoundException("Customer not found or In_valid Customer");
-                }
-                userDetails = UserDetailsImpl.build(customerModel);
+                // CustomerModel customerModel = customerService.findOne(userId);
+                // if (customerModel == null || customerModel.getStatus() != CustomerStatus.ACTIVE) {
+                // throw new ResourceNotFoundException("Customer not found or In_valid Customer");
+                // }
+                // userDetails = UserDetailsImpl.build(customerModel);
             } else {
                 UserModel userModel = userService.findOne(userId);
                 if (userModel == null || userModel.getStatus() != UserStatus.ACTIVE) {

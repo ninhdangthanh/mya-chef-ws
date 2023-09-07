@@ -26,11 +26,8 @@ import vn.com.ids.myachef.api.security.userdetails.UserDetailsImpl;
 import vn.com.ids.myachef.business.config.ApplicationConfig;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.exception.error.UnauthorizedException;
-import vn.com.ids.myachef.business.service.CustomerService;
 import vn.com.ids.myachef.business.service.UserService;
-import vn.com.ids.myachef.dao.enums.CustomerStatus;
 import vn.com.ids.myachef.dao.enums.UserStatus;
-import vn.com.ids.myachef.dao.model.CustomerModel;
 import vn.com.ids.myachef.dao.model.UserModel;
 
 @RestController
@@ -50,8 +47,8 @@ public class AuthenticationController {
     @Autowired
     private SecurityContextService securityContextService;
 
-    @Autowired
-    private CustomerService customerService;
+    // @Autowired
+    // private CustomerService customerService;
 
     @Autowired
     private UserService userService;
@@ -98,12 +95,12 @@ public class AuthenticationController {
         String type = null;
 
         if (UserDetailsImpl.CUSTOMER_ROLE.equals(jwtTokenService.getType(refreshToken))) {
-            CustomerModel customerModel = customerService.findOne(userId);
-            if (customerModel == null || customerModel.getStatus() != CustomerStatus.ACTIVE) {
-                throw new ResourceNotFoundException("Customer not found or In_valid Customer");
-            }
-            username = customerModel.getUsername();
-            type = UserDetailsImpl.CUSTOMER_ROLE;
+            // CustomerModel customerModel = customerService.findOne(userId);
+            // if (customerModel == null || customerModel.getStatus() != CustomerStatus.ACTIVE) {
+            // throw new ResourceNotFoundException("Customer not found or In_valid Customer");
+            // }
+            // username = customerModel.getUsername();
+            // type = UserDetailsImpl.CUSTOMER_ROLE;
         } else {
             UserModel userModel = userService.findOne(userId);
             if (userModel == null || userModel.getStatus() != UserStatus.ACTIVE) {
@@ -111,7 +108,7 @@ public class AuthenticationController {
             }
             username = userModel.getUsername();
         }
-        
+
         if (username == null) {
             throw new ResourceNotFoundException("Invalid User or Customer");
         }

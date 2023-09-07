@@ -18,6 +18,4 @@ public interface UserService extends IGenericService<UserModel, Long> {
     public UserDTO update(UserDTO userRequest);
 
     public UserModel findByUsername(String username);
-
-    public UserDTO updateProfile(ProfileRequest profileRequest, Long authenticatedUserId);
 }

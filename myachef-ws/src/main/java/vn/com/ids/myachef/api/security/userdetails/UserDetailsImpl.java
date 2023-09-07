@@ -10,13 +10,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import vn.com.ids.myachef.dao.enums.UserRole;
-import vn.com.ids.myachef.dao.model.CustomerModel;
 import vn.com.ids.myachef.dao.model.UserModel;
 
 public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String CUSTOMER_ROLE = "CUSTOMER";
 
     private Long id;
@@ -40,15 +39,15 @@ public class UserDetailsImpl implements UserDetails {
                 authorities);
     }
 
-    public static UserDetailsImpl build(CustomerModel customerModel) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(CUSTOMER_ROLE));
-
-        return new UserDetailsImpl( //
-                customerModel.getId(), //
-                customerModel.getUsername(), //
-                authorities);
-    }
+    // public static UserDetailsImpl build(CustomerModel customerModel) {
+    // List<GrantedAuthority> authorities = new ArrayList<>();
+    // authorities.add(new SimpleGrantedAuthority(CUSTOMER_ROLE));
+    //
+    // return new UserDetailsImpl( //
+    // customerModel.getId(), //
+    // customerModel.getUsername(), //
+    // authorities);
+    // }
 
     public Long getId() {
         return id;

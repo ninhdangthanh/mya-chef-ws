@@ -15,13 +15,9 @@ import vn.com.ids.myachef.api.security.request.AppLoginRequest;
 import vn.com.ids.myachef.api.security.request.WebLoginRequest;
 import vn.com.ids.myachef.api.security.userdetails.UserDetailsImpl;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
-import vn.com.ids.myachef.business.service.CustomerService;
 import vn.com.ids.myachef.business.service.UserService;
 import vn.com.ids.myachef.business.service.ZaloSocialService;
-import vn.com.ids.myachef.business.zalo.social.ZaloUser;
-import vn.com.ids.myachef.dao.enums.CustomerStatus;
 import vn.com.ids.myachef.dao.enums.UserStatus;
-import vn.com.ids.myachef.dao.model.CustomerModel;
 import vn.com.ids.myachef.dao.model.UserModel;
 
 @Component
@@ -34,8 +30,8 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     @Autowired
     private ZaloSocialService zaloSocialService;
 
-    @Autowired
-    private CustomerService customerService;
+    // @Autowired
+    // private CustomerService customerService;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -54,10 +50,10 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
             userDetailsImpl = UserDetailsImpl.build(userModel);
 
         } else if (loginRequest instanceof AppLoginRequest) {
-            String zaloToken = ((AppLoginRequest) loginRequest).getToken();
-
-            CustomerModel customerModel = appLogin(zaloToken);
-            userDetailsImpl = UserDetailsImpl.build(customerModel);
+            // String zaloToken = ((AppLoginRequest) loginRequest).getToken();
+            //
+            // CustomerModel customerModel = appLogin(zaloToken);
+            // userDetailsImpl = UserDetailsImpl.build(customerModel);
         }
 
         if (userDetailsImpl == null) {
@@ -67,22 +63,22 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         return new UsernamePasswordAuthenticationToken(userDetailsImpl, authentication.getCredentials(), userDetailsImpl.getAuthorities());
     }
 
-    private CustomerModel appLogin(String zaloToken) {
-        ZaloUser zaloUserInfo = zaloSocialService.getUserInfoByAccessToken(zaloToken);
-        if (zaloUserInfo == null || zaloUserInfo.getId() == null) {
-            throw new BadCredentialsException("Token In_valid or expired");
-        }
-        CustomerModel customerModel = customerService.findByUsername(zaloUserInfo.getId());
-        if (customerModel == null) {
-            customerModel = customerService.register(zaloUserInfo);
-        } else if (customerModel.getStatus() != CustomerStatus.ACTIVE) {
-            log.debug("User app: {} not found!", zaloUserInfo.getId());
-            throw new BadCredentialsException("Not found Customer or In_valid Customer");
-        }
-        customerModel.setZaloAccessToken(zaloToken);
-
-        return customerService.save(customerModel);
-    }
+    // private CustomerModel appLogin(String zaloToken) {
+    // ZaloUser zaloUserInfo = zaloSocialService.getUserInfoByAccessToken(zaloToken);
+    // if (zaloUserInfo == null || zaloUserInfo.getId() == null) {
+    // throw new BadCredentialsException("Token In_valid or expired");
+    // }
+    // CustomerModel customerModel = customerService.findByUsername(zaloUserInfo.getId());
+    // if (customerModel == null) {
+    // customerModel = customerService.register(zaloUserInfo);
+    // } else if (customerModel.getStatus() != CustomerStatus.ACTIVE) {
+    // log.debug("User app: {} not found!", zaloUserInfo.getId());
+    // throw new BadCredentialsException("Not found Customer or In_valid Customer");
+    // }
+    // customerModel.setZaloAccessToken(zaloToken);
+    //
+    // return customerService.save(customerModel);
+    // }
 
     private UserModel webLogin(String username, String password) {
         UserModel userModel = userService.findByUsername(username);

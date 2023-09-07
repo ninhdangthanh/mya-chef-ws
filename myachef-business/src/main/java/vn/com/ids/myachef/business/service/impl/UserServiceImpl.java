@@ -13,10 +13,8 @@ import vn.com.ids.myachef.business.converter.UserConverter;
 import vn.com.ids.myachef.business.dto.UserDTO;
 import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
-import vn.com.ids.myachef.business.payload.request.ProfileRequest;
 import vn.com.ids.myachef.business.service.UserService;
 import vn.com.ids.myachef.business.service.ZaloSocialService;
-import vn.com.ids.myachef.business.zalo.social.UserProfile;
 import vn.com.ids.myachef.dao.criteria.UserCriteria;
 import vn.com.ids.myachef.dao.criteria.builder.UserSpecificationBuilder;
 import vn.com.ids.myachef.dao.enums.UserStatus;
@@ -87,31 +85,6 @@ public class UserServiceImpl extends AbstractService<UserModel, Long> implements
     @Override
     public UserModel findByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public UserDTO updateProfile(ProfileRequest profileRequest, Long authenticatedUserId) {
-        UserModel userModel = findOne(authenticatedUserId);
-        if (userModel == null) {
-            throw new ResourceNotFoundException(String.format("Not found User by id: %s", authenticatedUserId));
-        }
-
-        if (profileRequest.getToken() != null) {
-            UserProfile userProfileResponse = zaloSocialService.getProfile(userModel.getZaloAccessToken(), profileRequest.getToken());
-            if (userProfileResponse == null || userProfileResponse.getData() == null) {
-                throw new ResourceNotFoundException("Can not get zalo user phoneNumber or location by token");
-            }
-
-            if (userProfileResponse.getData().getNumber() != null) {
-                userModel.setPhoneNumber(userProfileResponse.getData().getNumber());
-                userModel = save(userModel);
-            }
-        } else {
-            throw new BadRequestException("Not support for all code, phoneNumber, location");
-        }
-
-
-        return userConverter.toDTO(userModel);
     }
 
 }

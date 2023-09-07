@@ -86,7 +86,4 @@ public class UserModel implements Serializable {
     @Size(max = 1000, message = "The max size of searchText is 1000 characters.")
     private String searchText;
 
-    @Column(name = "zalo_access_token", columnDefinition = "TEXT")
-    private String zaloAccessToken;
-
 }
