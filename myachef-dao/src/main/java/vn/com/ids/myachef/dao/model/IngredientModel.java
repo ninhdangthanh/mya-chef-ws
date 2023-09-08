@@ -45,7 +45,7 @@ public class IngredientModel implements Serializable {
     
     private String name;
     
-    private int price;
+    private Integer price;
     
     private String image;
     

@@ -15,7 +15,7 @@ public class IngredientDTO {
 
 	private String name;
 
-	private int price;
+	private Integer price;
 
 	private String image;
 
@@ -32,6 +32,8 @@ public class IngredientDTO {
 	private Status status; // active là còn, in_active là hết
 
 	private IngredientCategoryDTO ingredientCategoryDTO;
+	
+	private Long ingredientCategoryDTOId;
 
 	private List<DishDetailDTO> dishDetailDTOs = new ArrayList<>();
 }

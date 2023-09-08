@@ -42,6 +42,9 @@ public class FileUploadServiceImpl extends AbstractService<FileUploadModel, Long
 
     @Autowired
     private FileUploadConverter fileUploadConverter;
+    
+    @Autowired
+    private HttpServletRequest request;
 
     protected FileUploadServiceImpl(FileUploadRepository fileUploadRepository) {
         super(fileUploadRepository);
@@ -193,5 +196,15 @@ public class FileUploadServiceImpl extends AbstractService<FileUploadModel, Long
     @Override
     public FileUploadModel findByBannerTypeAndIsBannerTrue(BannerType type) {
         return fileUploadRepository.findByBannerTypeAndIsBannerTrue(type);
+    }
+
+    @Override
+    public String getFilePath(String path, String filename) {
+        String filePath = null;
+        if (filename != null) {
+            String serverInfo = RequestUtils.getServerInfo(request);
+            filePath = String.format("%s/data/%s%s", serverInfo, path, filename);
+        }
+        return filePath;
     }
 }

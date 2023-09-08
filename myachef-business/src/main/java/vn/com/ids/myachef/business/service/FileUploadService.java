@@ -31,4 +31,6 @@ public interface FileUploadService extends IGenericService<FileUploadModel, Long
     public void deleteBannerModelAndFileById(Long id);
 
     public FileUploadModel findByBannerTypeAndIsBannerTrue(BannerType type);
+    
+    public String getFilePath(String path, String filename);
 }
