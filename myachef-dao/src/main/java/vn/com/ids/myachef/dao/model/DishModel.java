@@ -73,13 +73,13 @@ public class DishModel implements Serializable {
     @ToString.Exclude
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishDetailModel> dishDetails = new ArrayList<>();
+    
+    @ToString.Exclude
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetailModel> orderDetails = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private DishCategoryModel dishCategory;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private OrderModel order;
-
 }
