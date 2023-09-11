@@ -1,11 +1,15 @@
 package vn.com.ids.myachef.api.controller;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +29,11 @@ import vn.com.ids.myachef.business.converter.IngredientConverter;
 import vn.com.ids.myachef.business.dto.IngredientDTO;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.IngredientService;
+import vn.com.ids.myachef.business.utils.excel.ExcelGenerator;
+import vn.com.ids.myachef.business.utils.excel.Student;
 import vn.com.ids.myachef.business.validation.group.OnCreate;
 import vn.com.ids.myachef.dao.model.IngredientModel;
+import org.springframework.http.HttpHeaders;
 
 @RestController
 @RequestMapping("/api/ingredient")
@@ -38,6 +45,9 @@ public class IngredientController {
 	
 	@Autowired
 	private IngredientConverter ingredientConverter;
+	
+	@Autowired
+    private ExcelGenerator excel;
 	
 	@Operation(summary = "Get all")
     @GetMapping("/search")
@@ -83,4 +93,17 @@ public class IngredientController {
     public void delete(@RequestParam Long id) {
 		ingredientService.deleteById(id);
 	}
+	
+	@Operation(summary = "Export Frame Excel")
+    @PatchMapping(value = "/export-frame-excel")
+    public ResponseEntity<InputStreamResource> exportFrameExcel() throws Exception { //[{id_nguyên_liệu: quantity}, {id_nguyên_liệu: quantity}]
+	    List<Student> students = new ArrayList<>();
+	    
+	    ByteArrayInputStream in = excel.exportExcel(students);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=students.xlsx");
+
+        return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
+    }
 }
