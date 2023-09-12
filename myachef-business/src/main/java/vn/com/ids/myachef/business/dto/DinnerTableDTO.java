@@ -3,8 +3,11 @@ package vn.com.ids.myachef.business.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.Setter;
+import vn.com.ids.myachef.business.validation.group.OnCreate;
 import vn.com.ids.myachef.dao.enums.Status;
 
 @Getter
@@ -13,6 +16,7 @@ public class DinnerTableDTO {
 	
 	private Long id;
 
+	@NotBlank(message = "Field 'tableNumber': {notblank}", groups = { OnCreate.class })
 	private String tableNumber;
 
 	private Status status;
