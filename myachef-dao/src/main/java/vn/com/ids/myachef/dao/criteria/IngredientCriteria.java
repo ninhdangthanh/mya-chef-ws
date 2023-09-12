@@ -12,7 +12,7 @@ public class IngredientCriteria extends AbstractCriteria {
 
 	private String name;
 
-	private int price;
+	private Double price;
 
 	private String image;
 

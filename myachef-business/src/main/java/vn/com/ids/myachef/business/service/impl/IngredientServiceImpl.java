@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +25,8 @@ import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.IngredientCategoryService;
 import vn.com.ids.myachef.business.service.IngredientService;
 import vn.com.ids.myachef.business.service.filehelper.FileStorageService;
+import vn.com.ids.myachef.dao.criteria.IngredientCriteria;
+import vn.com.ids.myachef.dao.criteria.builder.IngredientSpecificationBuilder;
 import vn.com.ids.myachef.dao.enums.Status;
 import vn.com.ids.myachef.dao.model.IngredientCategoryModel;
 import vn.com.ids.myachef.dao.model.IngredientModel;
@@ -126,6 +131,26 @@ public class IngredientServiceImpl extends AbstractService<IngredientModel, Long
         ingredientModels = saveAll(ingredientModels);
 
         return ingredientConverter.toBasicDTOs(ingredientModels);
+    }
+
+    @Override
+    public Page<IngredientModel> findAll(IngredientCriteria ingredientCriteria) {
+        Specification<IngredientModel> specification = buildSpecification(ingredientCriteria);
+        Pageable pageable = buildPageable(ingredientCriteria);
+        return ingredientRepository.findAll(specification, pageable);
+    }
+    
+    public Specification<IngredientModel> buildSpecification(IngredientCriteria ingredientCriteria) {
+        return (root, criteriaQuery, criteriaBuilder) //
+        -> new IngredientSpecificationBuilder(root, criteriaBuilder) //
+                .setName(ingredientCriteria.getName())//
+                .setPrice(ingredientCriteria.getPrice())//
+                .setImage(ingredientCriteria.getImage())//
+                .setQuantity(ingredientCriteria.getQuantity())//
+                .setUnit(ingredientCriteria.getUnit())//
+                .setDescription(ingredientCriteria.getDescription())//
+                .setStatus(ingredientCriteria.getStatus())//
+                .build();
     }
 
 }
