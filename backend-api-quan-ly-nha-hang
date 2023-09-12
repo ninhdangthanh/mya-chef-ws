@@ -1,0 +1,40 @@
+Bank
+User
+
+Danh mục nguyên liệu
+-Thêm sửa xóa
+
+nguyên liệu
+-Thêm sửa xóa
+-API thêm nguyên liệu theo kiểu key value {id nguyên liệu: số lượng}
+-Api lấy cái khung excel để import nguyên liệu
+-Api thêm nguyên liệu từ file excel
+
+Danh mục món ăn
+-Thêm sửa xóa
+
+Món ăn
+-Thêm sửa xóa
+-Read (hiển thị cái nào còn đủ nguyên liệu, cái nào không đủ thì disable)
+
+bàn
+-Thêm sửa xóa, thay đổi trạng thái khi bàn được sử dụng (có hóa đơn)
+-Read (hiển thị cái nào chưa sử dụng , cái nào đang sử dụng thì disable)
+
+hóa đơn
+-Thêm sửa xóa
+-Thêm món ăn vào hóa đơn
+-Xóa món ăn khỏi hóa đơn(khi nó chưa được nấu)
+---- khi thêm hoặc xóa món ăn khỏi hóa đơn thì nguyên liệu sẽ được thêm lại hoặc lấy ra và sửa lại status món ăn đó có thể đặt không
+-Sửa trạng thái của món ăn trong hóa đơn
+-api gửi ảnh lên admin để người quản lý check tài khoản
+
+Thống kê
+-api thống kê
+
+
+Ở giao diện của cả đầu bếp và bồi bàn, khi bấm vào bàn thì sẽ thấy các món hiện tại của bàn đó
+Các trạng thái đã đủ món này kia
+
+
+Module thống kê và chấm công sẽ làm sau

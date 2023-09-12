@@ -31,7 +31,7 @@ public class DishCategoryConverter {
     public DishCategoryDTO toBasicDTO(DishCategoryModel dishCategoryModel) {
         DishCategoryDTO dishCategoryDTO = mapper.map(dishCategoryModel, DishCategoryDTO.class);
         if (StringUtils.hasText(dishCategoryModel.getImage()) && !dishCategoryModel.getImage().startsWith("https://pos.nvncdn.net")) {
-            dishCategoryModel
+            dishCategoryDTO
                     .setImage(fileUploadService.getFilePath(applicationConfig.getDishCategoryPath(), dishCategoryModel.getImage()));
         }
         return dishCategoryDTO;

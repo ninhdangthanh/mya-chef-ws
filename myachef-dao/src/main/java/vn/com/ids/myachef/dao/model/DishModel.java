@@ -46,7 +46,7 @@ public class DishModel implements Serializable {
 
     private String name;
 
-    private int price;
+    private Double price;
 
     private String priceLabel;
 
@@ -68,7 +68,7 @@ public class DishModel implements Serializable {
 
     @Column(name = "dish_status")
     @Enumerated(EnumType.STRING)
-    private DishStatus diskStatus;
+    private DishStatus dishStatus;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)

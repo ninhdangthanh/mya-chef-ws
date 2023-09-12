@@ -327,6 +327,14 @@ public class ApplicationConfig {
         return DISH_CATEGORY;
     }
     
+    public String getFullDishPath() {
+        return fileUploadPath + DISH;
+    }
+
+    public String getDishPath() {
+        return DISH;
+    }
+    
     public String getFullIngredientPath() {
         return fileUploadPath + INGREDIENT;
     }

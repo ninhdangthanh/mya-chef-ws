@@ -16,7 +16,7 @@ public class DishDTO {
 
 	private String name;
 
-	private int price;
+	private Double price;
 
 	private String priceLabel;
 
@@ -30,11 +30,13 @@ public class DishDTO {
 
 	private Status status;
 
-	private DishStatus diskStatus;
+	private DishStatus dichStatus;
 
 	private List<DishDetailDTO> dishDetailDTOs = new ArrayList<>();
 
 	private DishCategoryDTO dishCategoryDTO;
+	
+	private Long dishCategoryId;
 
 	private OrderDTO orderDTO;
 }

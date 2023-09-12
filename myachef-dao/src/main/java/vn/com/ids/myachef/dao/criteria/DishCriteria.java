@@ -10,8 +10,10 @@ import vn.com.ids.myachef.dao.enums.Status;
 public class DishCriteria extends AbstractCriteria {
 
 	private static final long serialVersionUID = 1L;
+	
+	private String name;
 
-	private int price;
+	private Double price;
 
 	private String priceLabel;
 
@@ -23,5 +25,4 @@ public class DishCriteria extends AbstractCriteria {
 
 	private DishStatus diskStatus;
 	
-	private Long dishCategoryId;
 }

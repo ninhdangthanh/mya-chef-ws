@@ -88,7 +88,7 @@ public class IngredientServiceImpl extends AbstractService<IngredientModel, Long
     public IngredientDTO update(IngredientDTO ingredientDTO, IngredientModel ingredientModel, MultipartFile image) {
         if (image != null) {
             if (StringUtils.hasText(ingredientModel.getImage())) {
-                fileStorageService.delete(applicationConfig.getFullIngredientCategoryPath() + ingredientModel.getImage());
+                fileStorageService.delete(applicationConfig.getFullIngredientPath() + ingredientModel.getImage());
             }
 
             String prefixName = UUID.randomUUID().toString();

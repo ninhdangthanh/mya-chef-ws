@@ -18,6 +18,7 @@ import vn.com.ids.myachef.business.dto.IngredientCategoryDTO;
 import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.service.DishCategoryService;
 import vn.com.ids.myachef.business.service.filehelper.FileStorageService;
+import vn.com.ids.myachef.dao.enums.Status;
 import vn.com.ids.myachef.dao.model.DishCategoryModel;
 import vn.com.ids.myachef.dao.repository.DishCategoryRepository;
 
@@ -55,6 +56,7 @@ public class DishCategoryServiceImpl extends AbstractService<DishCategoryModel, 
                     image);
             dishCategoryModel.setImage(generatedName);
         }
+        dishCategoryModel.setStatus(Status.ACTIVE);
         dishCategoryModel = save(dishCategoryModel);
         return dishCategoryConverter.toBasicDTO(dishCategoryModel);
     }
