@@ -56,7 +56,7 @@ public class DishCategoryConverter {
         return dishCategoryDTO;
     }
 
-    public void mapDataToUpdate(IngredientCategoryModel model, IngredientCategoryDTO dto) {
+    public void mapDataToUpdate(DishCategoryModel model, DishCategoryDTO dto) {
         if (StringUtils.hasText(dto.getName())) {
             model.setName(dto.getName());
         }

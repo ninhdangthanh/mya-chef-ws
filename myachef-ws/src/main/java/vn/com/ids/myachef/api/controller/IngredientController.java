@@ -42,7 +42,6 @@ import org.springframework.http.HttpHeaders;
 
 @RestController
 @RequestMapping("/api/ingredient")
-@Slf4j
 public class IngredientController {
 	
 	@Autowired

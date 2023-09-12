@@ -33,7 +33,6 @@ import vn.com.ids.myachef.dao.model.IngredientCategoryModel;
 
 @RestController
 @RequestMapping("/api/dish-category")
-@Slf4j
 public class DishCategoryController {
 	
 	@Autowired
@@ -67,12 +66,12 @@ public class DishCategoryController {
 	
 	@Operation(summary = "Update")
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public DishCategoryDTO updateBanner(@PathVariable Long id, @Valid @RequestPart IngredientCategoryDTO ingredientCategoryDTO, @RequestParam(value = "image", required = false) MultipartFile image) {
+    public DishCategoryDTO updateBanner(@PathVariable Long id, @Valid @RequestPart DishCategoryDTO dishCategoryDTO, @RequestParam(value = "image", required = false) MultipartFile image) {
 	    DishCategoryModel dishCategoryModel = dishCategoryService.findOne(id);
         if (dishCategoryModel == null) {
             throw new ResourceNotFoundException("Not found dish category with id: " + id);
         }
-        return dishCategoryService.update(ingredientCategoryDTO, dishCategoryModel, image);
+        return dishCategoryService.update(dishCategoryDTO, dishCategoryModel, image);
     }
 	
 	@Operation(summary = "Delete")

@@ -29,7 +29,6 @@ import vn.com.ids.myachef.dao.model.IngredientCategoryModel;
 
 @RestController
 @RequestMapping("/api/ingredient-category")
-@Slf4j
 public class IngredientCategoryController {
 	
 	@Autowired

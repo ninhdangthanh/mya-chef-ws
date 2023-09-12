@@ -61,13 +61,13 @@ public class AuthenticationController {
         return buildJwtResponse(authentication);
     }
 
-    @PostMapping("/app/signin")
-    public JwtResponse signinByApp(HttpServletRequest request, @RequestBody AppLoginRequest loginRequest) {
-        log.info("------------------ APP Login - START ----------------");
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest, null));
-        log.info("------------------ APP Login - START ----------------");
-        return buildJwtResponse(authentication);
-    }
+//    @PostMapping("/app/signin")
+//    public JwtResponse signinByApp(HttpServletRequest request, @RequestBody AppLoginRequest loginRequest) {
+//        log.info("------------------ APP Login - START ----------------");
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest, null));
+//        log.info("------------------ APP Login - START ----------------");
+//        return buildJwtResponse(authentication);
+//    }
 
     private JwtResponse buildJwtResponse(Authentication authentication) {
         SecurityContextHolder.getContext().setAuthentication(authentication);
