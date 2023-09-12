@@ -13,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import vn.com.ids.myachef.dao.model.IngredientModel;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,14 +34,14 @@ import java.util.List;
 public class ExcelGenerator {
 
     /* export */
-    public ByteArrayInputStream exportExcel(List<Student> students) throws Exception {
-        String[] columns = {"Id", "Name", "Kelas", "Jurusan"};
+    public ByteArrayInputStream exportExcel(List<IngredientModel> ingredientModels) throws Exception {
+        String[] columns = {"Id", "Name", "Quantity"};
         try (
                 Workbook workbook = new XSSFWorkbook();
                 ByteArrayOutputStream out = new ByteArrayOutputStream()
         ) {
             CreationHelper creationHelper = workbook.getCreationHelper();
-            Sheet sheet = workbook.createSheet("Data Students");
+            Sheet sheet = workbook.createSheet("Data Ingredients");
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
             headerFont.setColor(IndexedColors.BLUE.getIndex());
@@ -57,13 +60,13 @@ public class ExcelGenerator {
 
 
             int rowIdx = 1;
-            for (Student student : students) {
+            for (IngredientModel ingredient : ingredientModels) {
                 Row row = sheet.createRow(rowIdx);
 
-                row.createCell(0).setCellValue(student.getId());
-                row.createCell(1).setCellValue(student.getName());
-                row.createCell(2).setCellValue(student.getKelas());
-                row.createCell(3).setCellValue(student.getJurusan());
+                row.createCell(0).setCellValue(ingredient.getId());
+                row.createCell(1).setCellValue(ingredient.getName());
+                row.createCell(2).setCellValue(0);
+                
                 rowIdx++;
             }
 
@@ -74,6 +77,36 @@ public class ExcelGenerator {
 
         }
         return null;
+    }
+    
+    public List<IngredientModel> importExcel(MultipartFile file) throws Exception {
+
+        Workbook workbook = new XSSFWorkbook(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+        
+        List<IngredientModel> ingredientModels = new ArrayList<>();
+
+        for (int i = 0; i < (CountRowExcel(sheet.rowIterator())); i++) {
+            if (i == 0) {
+                continue;
+            }
+
+            Row row = sheet.getRow(i);
+
+            double id = row.getCell(0).getNumericCellValue();
+            String name = row.getCell(1).getStringCellValue();
+            double quantity = row.getCell(2).getNumericCellValue();
+
+            IngredientModel ingredientModel = new IngredientModel();
+            ingredientModel.setId(Long.valueOf((long)id));
+            ingredientModel.setName(name);
+            ingredientModel.setQuantity(Double.valueOf(quantity));
+            
+            ingredientModels.add(ingredientModel);
+        }
+        
+        return ingredientModels;
+
     }
 
     /* Cout Row of Excel Table */

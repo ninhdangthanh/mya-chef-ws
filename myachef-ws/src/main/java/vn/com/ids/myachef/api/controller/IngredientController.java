@@ -6,8 +6,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +37,7 @@ import vn.com.ids.myachef.business.service.IngredientService;
 import vn.com.ids.myachef.business.utils.excel.ExcelGenerator;
 import vn.com.ids.myachef.business.utils.excel.Student;
 import vn.com.ids.myachef.business.validation.group.OnCreate;
+import vn.com.ids.myachef.dao.criteria.IngredientCriteria;
 import vn.com.ids.myachef.dao.model.IngredientModel;
 import org.springframework.http.HttpHeaders;
 
@@ -49,10 +55,13 @@ public class IngredientController {
 	@Autowired
     private ExcelGenerator excel;
 	
-	@Operation(summary = "Get all")
+	@Operation(summary = "Find by criteria")
     @GetMapping("/search")
-	public List<IngredientDTO> getAll() {
-		return ingredientConverter.toBasicDTOs(ingredientService.findAll());
+	public Page<IngredientDTO> getAll(@ParameterObject IngredientCriteria ingredientCriteria) {
+	    Page<IngredientModel> page = ingredientService.findAll(ingredientCriteria);
+        List<IngredientDTO> ingredientDTOs = ingredientConverter.toBasicDTOs(page.getContent());
+        Pageable pageable = PageRequest.of(ingredientCriteria.getPageIndex(), ingredientCriteria.getPageSize());
+        return new PageImpl<>(ingredientDTOs, pageable, page.getTotalElements());
 	}
 	
 	@Operation(summary = "Find by id")
@@ -95,15 +104,26 @@ public class IngredientController {
 	}
 	
 	@Operation(summary = "Export Frame Excel")
-    @PatchMapping(value = "/export-frame-excel")
+    @GetMapping(value = "/export-frame-excel")
     public ResponseEntity<InputStreamResource> exportFrameExcel() throws Exception { //[{id_nguyên_liệu: quantity}, {id_nguyên_liệu: quantity}]
-	    List<Student> students = new ArrayList<>();
+	    List<IngredientModel> ingredientModels = ingredientService.findAll();
 	    
-	    ByteArrayInputStream in = excel.exportExcel(students);
+	    ByteArrayInputStream in = excel.exportExcel(ingredientModels);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=students.xlsx");
+        headers.add("Content-Disposition", "attachment; filename=ingredients.xlsx");
 
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
     }
+	
+	@PostMapping(value = "/import-data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<IngredientDTO> createPostImport(@RequestParam(name = "file") MultipartFile file) throws Exception {
+
+	    List<IngredientModel> ingredientModels = excel.importExcel(file);
+	    List<IngredientDTO> ingredientDTOs = ingredientConverter.toBasicDTOs(ingredientModels);
+	    
+	    return ingredientService.manualAddIngredient(ingredientDTOs);
+    }
+	
+	
 }
