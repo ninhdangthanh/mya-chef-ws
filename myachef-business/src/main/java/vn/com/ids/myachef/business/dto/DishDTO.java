@@ -2,7 +2,9 @@ package vn.com.ids.myachef.business.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,4 +41,6 @@ public class DishDTO {
 	private Long dishCategoryId;
 
 	private OrderDTO orderDTO;
+	
+	private Map<Long, Double> dishDetailHashMap = new HashMap<>(); // id : quantity
 }

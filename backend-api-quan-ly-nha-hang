@@ -16,10 +16,11 @@ Danh mục món ăn
 Món ăn
 -Thêm sửa xóa
 -Read (hiển thị cái nào còn đủ nguyên liệu, cái nào không đủ thì disable)
+--------------- thêm và sửa món ăn thêm nguyên liệu vào
 
 bàn
 -Thêm sửa xóa, thay đổi trạng thái khi bàn được sử dụng (có hóa đơn)
--Read (hiển thị cái nào chưa sử dụng , cái nào đang sử dụng thì disable)
+-Read (hiển thị cái nào chưa sử dụng , cái nào đang sử dụng thì disable, làm lúc tạo và hoàn thành hóa đơn)
 
 hóa đơn
 -Thêm sửa xóa

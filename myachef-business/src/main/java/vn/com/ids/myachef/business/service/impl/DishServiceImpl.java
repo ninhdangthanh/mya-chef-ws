@@ -1,6 +1,11 @@
 package vn.com.ids.myachef.business.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -20,13 +25,16 @@ import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.DishCategoryService;
 import vn.com.ids.myachef.business.service.DishService;
+import vn.com.ids.myachef.business.service.IngredientService;
 import vn.com.ids.myachef.business.service.filehelper.FileStorageService;
 import vn.com.ids.myachef.dao.criteria.DishCriteria;
 import vn.com.ids.myachef.dao.criteria.builder.DishSpecificationBuilder;
 import vn.com.ids.myachef.dao.enums.DishStatus;
 import vn.com.ids.myachef.dao.enums.Status;
 import vn.com.ids.myachef.dao.model.DishCategoryModel;
+import vn.com.ids.myachef.dao.model.DishDetailModel;
 import vn.com.ids.myachef.dao.model.DishModel;
+import vn.com.ids.myachef.dao.model.IngredientModel;
 import vn.com.ids.myachef.dao.repository.DishRepository;
 
 @Service
@@ -43,6 +51,9 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
 
     @Autowired
     private DishConverter dishConverter;
+    
+    @Autowired
+    private IngredientService ingredientService;
 
     @Autowired
     private DishCategoryService dishCategoryService;
@@ -73,14 +84,14 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
     @Override
     public DishDTO create(@Valid DishDTO dishDTO, MultipartFile image) {
         DishModel dishModel = dishConverter.toBasicModel(dishDTO);
-        if (!StringUtils.hasText(dishModel.getName()) || dishModel.getPrice() != null || dishModel.getPrice() <= 0
+        if (!StringUtils.hasText(dishModel.getName()) || dishModel.getPrice() == null || dishModel.getPrice() <= 0
                 || !StringUtils.hasText(dishModel.getPriceLabel())) {
             throw new BadRequestException("Field name, price, price label can not blank or null or <= 0");
         }
 
         if (dishDTO.getDishCategoryId() != null) {
             DishCategoryModel dishCategoryModel = dishCategoryService.findOne(dishDTO.getDishCategoryId());
-            if (dishCategoryService == null) {
+            if (dishCategoryModel == null) {
                 throw new ResourceNotFoundException("Not found dish category with id: " + dishDTO.getDishCategoryId());
             }
             dishModel.setDishCategory(dishCategoryModel);
@@ -93,7 +104,31 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
             fileStorageService.upload(String.format(applicationConfig.getFullDishPath(), prefixName), generatedName, image);
             dishModel.setImage(generatedName);
         }
-
+        
+        if(dishDTO.getDishDetailHashMap().keySet() != null) {
+            List<IngredientModel> ingredientModels = ingredientService.findByIdIn(dishDTO.getDishDetailHashMap().keySet());
+            Map<Long, IngredientModel> ingredientModelHashMaps = ingredientModels.stream().collect(Collectors.toMap(IngredientModel::getId, Function.identity()));
+                    
+            List<DishDetailModel> dishDetailModels = new ArrayList<>();
+            for(Long ingredientId : dishDTO.getDishDetailHashMap().keySet()) {
+                 IngredientModel ingredientModel = ingredientModelHashMaps.get(ingredientId);
+                 if(ingredientModel == null) {
+                     continue;
+                 }
+                 DishDetailModel dishDetailModel = new DishDetailModel();
+                 dishDetailModel.setIngredient(ingredientModel);
+                 dishDetailModel.setStatus(Status.ACTIVE);
+                 if(dishDTO.getDishDetailHashMap().get(ingredientId) == null || 
+                         dishDTO.getDishDetailHashMap().get(ingredientId) <= 0) {
+                     dishDetailModel.setQuantity(0.0);
+                 } else {
+                     dishDetailModel.setQuantity(dishDTO.getDishDetailHashMap().get(ingredientId));
+                 }
+                 dishDetailModels.add(dishDetailModel);
+            }
+            dishModel.setDishDetails(dishDetailModels);
+        }
+        
         dishModel.setStatus(Status.ACTIVE);
         dishModel.setDishStatus(DishStatus.AVAILABLE);
         dishModel = save(dishModel);

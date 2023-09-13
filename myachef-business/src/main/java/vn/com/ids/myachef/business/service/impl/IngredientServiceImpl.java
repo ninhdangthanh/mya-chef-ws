@@ -2,6 +2,7 @@ package vn.com.ids.myachef.business.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -152,5 +153,9 @@ public class IngredientServiceImpl extends AbstractService<IngredientModel, Long
                 .setStatus(ingredientCriteria.getStatus())//
                 .build();
     }
-
+    
+    @Override
+    public List<IngredientModel> findByIdIn(Set<Long> ids) {
+        return ingredientRepository.findByIdIn(ids);
+    }
 }

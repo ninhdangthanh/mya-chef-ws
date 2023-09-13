@@ -171,14 +171,6 @@ public class ApplicationConfig {
     @Value("${coin.ratio.convert}")
     private Long coinRatioConvert;
 
-    public String getOrderPath() {
-        return ORDER_PATH + "%s/";
-    }
-
-    public String getFullOrderPath() {
-        return fileUploadPath + ORDER_PATH + "%s/";
-    }
-
     public String getFullCustomerAvatarPath() {
         return fileUploadPath + CUSTOMER_AVATAR_PATH + "%s/";
     }
@@ -333,6 +325,14 @@ public class ApplicationConfig {
 
     public String getDishPath() {
         return DISH;
+    }
+    
+    public String getOrderPath() {
+        return ORDER_PATH;
+    }
+
+    public String getFullOrderPath() {
+        return fileUploadPath + ORDER_PATH;
     }
     
     public String getFullIngredientPath() {

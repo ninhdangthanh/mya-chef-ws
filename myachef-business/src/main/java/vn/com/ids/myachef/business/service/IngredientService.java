@@ -1,6 +1,7 @@
 package vn.com.ids.myachef.business.service;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -20,4 +21,6 @@ public interface IngredientService extends IGenericService<IngredientModel, Long
 	List<IngredientDTO> manualAddIngredient(@Valid List<IngredientDTO> ingredientDTOs);
 
     Page<IngredientModel> findAll(IngredientCriteria ingredientCriteria);
+
+    List<IngredientModel> findByIdIn(Set<Long> ids);
 }
