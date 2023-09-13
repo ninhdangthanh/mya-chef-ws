@@ -66,9 +66,7 @@ public class OrderController {
     @PostMapping
     @Validated(OnCreate.class)
     public OrderDTO create(@Valid @RequestBody OrderDTO orderDTO) {
-        
-        return null;
-//        return orderService.create(orderDTO);
+        return orderService.create(orderDTO);
     }
 
     @Operation(summary = "Update")

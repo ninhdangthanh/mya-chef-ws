@@ -42,7 +42,7 @@ public class DinnerTableModel implements Serializable {
     
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status; 
+    private Status status = Status.IN_ACTIVE; 
     
     @ToString.Exclude
     @OneToMany(mappedBy = "dinnerTable", cascade = CascadeType.ALL, orphanRemoval = true)
