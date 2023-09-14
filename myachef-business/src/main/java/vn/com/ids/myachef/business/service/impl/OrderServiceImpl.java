@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.com.ids.myachef.business.config.ApplicationConfig;
 import vn.com.ids.myachef.business.converter.OrderConverter;
 import vn.com.ids.myachef.business.dto.OrderDTO;
+import vn.com.ids.myachef.business.dto.OrderDetailDTO;
 import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.DinnerTableService;
@@ -111,6 +112,9 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
         }
         dinnerTableModel.setStatus(Status.ACTIVE);
         orderModel.setDinnerTable(dinnerTableModel);
+        
+        dinnerTableModel.setEnoughtFood(false);
+        dinnerTableService.save(dinnerTableModel);
 
         // user //
         if (orderDTO.getUserId() == null || orderDTO.getUserId() <= 0) {
@@ -216,6 +220,11 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
             OrderDetailModel orderDetailModel = orderDetailModels.get(0);
             orderDetailModel.setQuantity(orderDetailModel.getQuantity() + 1);
         }
+        
+        // xử lý chuyển trạng thái bàn sang chưa đủ món ăn ở trên bàn
+        DinnerTableModel dinnerTableModel = orderModel.getDinnerTable();
+        dinnerTableModel.setEnoughtFood(false);
+        dinnerTableService.save(dinnerTableModel);
 
         save(orderModel);
 
@@ -268,6 +277,11 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
         
         orderModel.getDinnerTable().setStatus(Status.IN_ACTIVE);
         
+        DinnerTableModel dinnerTableModel = orderModel.getDinnerTable();
+        dinnerTableModel.setEnoughtFood(false);
+        dinnerTableService.save(dinnerTableModel);
+        
+        
         orderModel = save(orderModel);
         
         return orderConverter.toDTO(orderModel);
@@ -304,6 +318,37 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
     @Override
     public OrderModel findOrderExistingByDinnerTableId(Long dinnerTableId) {
         return orderRepository.findOrderExistingByDinnerTableId(dinnerTableId);
+    }
+    
+    @Override
+    public String changeStatusOneFood(OrderDetailModel orderDetailModel, OrderDetailDTO orderDetailDTO) {
+        if(orderDetailDTO.getStatus() == null) {
+            throw new BadRequestException("You must add status into order detail to using this API");
+        }
+        orderDetailModel.setStatus(orderDetailDTO.getStatus());
+        
+        orderDetailRepository.save(orderDetailModel);
+        
+        
+        // kiểm tra bàn đã đủ món ăn chưa
+        boolean enoughFood = true;
+        
+        OrderModel orderModel = orderDetailModel.getOrder();
+        if(!CollectionUtils.isEmpty(orderModel.getOrderDetails())) {
+            for (OrderDetailModel orderDetailModelItem : orderModel.getOrderDetails()) {
+                if(orderDetailModelItem.getStatus() != OrderDetailStatus.LEAVED_KITCHEN) {
+                    enoughFood = false;
+                }
+            }
+        }
+        
+        if(enoughFood) {
+            DinnerTableModel dinnerTableModel = orderModel.getDinnerTable();
+            dinnerTableModel.setEnoughtFood(true);
+            dinnerTableService.save(dinnerTableModel);
+        }
+        
+        return null;
     }
 
 }

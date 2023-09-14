@@ -1,6 +1,7 @@
 package vn.com.ids.myachef.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -27,11 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Operation;
 import vn.com.ids.myachef.business.converter.OrderConverter;
 import vn.com.ids.myachef.business.dto.OrderDTO;
+import vn.com.ids.myachef.business.dto.OrderDetailDTO;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.OrderService;
 import vn.com.ids.myachef.business.validation.group.OnCreate;
 import vn.com.ids.myachef.dao.criteria.OrderCriteria;
+import vn.com.ids.myachef.dao.model.OrderDetailModel;
 import vn.com.ids.myachef.dao.model.OrderModel;
+import vn.com.ids.myachef.dao.repository.OrderDetailRepository;
 
 @RestController
 @RequestMapping("/api/order")
@@ -39,6 +43,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @Autowired
     private OrderConverter orderConverter;
@@ -127,6 +134,16 @@ public class OrderController {
             throw new ResourceNotFoundException("Not found order with id: " + orderId);
         }
         return orderService.confirmBankPayment(orderModel);
+    }
+    
+    @Operation(summary = "Change Status Of Food In Order")
+    @PatchMapping(value = "/change-food-status/{orderDetailId}")
+    public String changeFoodStatus(@PathVariable Long orderDetailId, @RequestBody OrderDetailDTO orderDetailDTO) {
+        Optional<OrderDetailModel> orderDetailModel = orderDetailRepository.findById(orderDetailId);
+        if (!orderDetailModel.isPresent()) {
+            throw new ResourceNotFoundException("Not found food in order with id: " + orderDetailId);
+        }
+        return orderService.changeStatusOneFood(orderDetailModel.get(), orderDetailDTO);
     }
 
     @Operation(summary = "Delete")

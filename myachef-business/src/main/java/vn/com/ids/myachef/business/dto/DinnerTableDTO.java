@@ -18,6 +18,8 @@ public class DinnerTableDTO {
 
 	@NotBlank(message = "Field 'tableNumber': {notblank}", groups = { OnCreate.class })
 	private String tableNumber;
+	
+	private Boolean enoughtFood;
 
 	private Status status;
 

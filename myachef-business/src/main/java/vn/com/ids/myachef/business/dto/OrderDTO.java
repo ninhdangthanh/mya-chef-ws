@@ -16,8 +16,8 @@ public class OrderDTO {
     private Double totalPayment;
 
     private String imagePayment;
-
-    private Boolean isPaymentWithBanking = false;
+    
+    private Boolean isPaymentWithBanking;
     
     private LocalDateTime createdDate;
 

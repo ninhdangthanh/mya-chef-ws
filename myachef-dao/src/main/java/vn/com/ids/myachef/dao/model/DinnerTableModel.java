@@ -40,6 +40,8 @@ public class DinnerTableModel implements Serializable {
     
     private String tableNumber;
     
+    private Boolean enoughtFood = false;
+    
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status = Status.IN_ACTIVE; 

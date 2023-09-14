@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.com.ids.myachef.business.dto.OrderDTO;
+import vn.com.ids.myachef.business.dto.OrderDetailDTO;
 import vn.com.ids.myachef.dao.criteria.OrderCriteria;
+import vn.com.ids.myachef.dao.model.OrderDetailModel;
 import vn.com.ids.myachef.dao.model.OrderModel;
 
 public interface OrderService extends IGenericService<OrderModel, Long> {
@@ -28,4 +30,6 @@ public interface OrderService extends IGenericService<OrderModel, Long> {
     OrderDTO confirmBankPayment(OrderModel orderModel);
 
     OrderModel findOrderExistingByDinnerTableId(Long dinnerTableId);
+
+    String changeStatusOneFood(OrderDetailModel orderDetailModel, OrderDetailDTO orderDetailDTO);
 }
