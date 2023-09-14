@@ -7,32 +7,33 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import vn.com.ids.myachef.dao.enums.OrderStatus;
-import vn.com.ids.myachef.dao.model.OrderDetailModel;
 
 @Getter
 @Setter
 public class OrderDTO {
-	private Long id;
+    private Long id;
 
-	private Double totalPayment;
-	
-	private String imagePayment;
+    private Double totalPayment;
 
-	private LocalDateTime createdDate;
+    private String imagePayment;
 
-	private LocalDateTime modifiedDate;
+    private Boolean isPaymentWithBanking = false;
+    
+    private LocalDateTime createdDate;
 
-	private DinnerTableDTO dinnerTableDTO;
-	
-	private Long dinnerTableId;
-	
-	private Long userId;
-	
-	private OrderStatus status;
+    private LocalDateTime modifiedDate;
 
-	private UserDTO userDTO;
+    private DinnerTableDTO dinnerTableDTO;
 
-	private List<OrderDetailDTO> orderDetailDTOs = new ArrayList<>();
-	
-	private List<Long> dishIds = new ArrayList<>();
+    private Long dinnerTableId;
+
+    private Long userId;
+
+    private OrderStatus status;
+
+    private UserDTO userDTO;
+
+    private List<OrderDetailDTO> orderDetailDTOs = new ArrayList<>();
+
+    private List<Long> dishIds = new ArrayList<>();
 }

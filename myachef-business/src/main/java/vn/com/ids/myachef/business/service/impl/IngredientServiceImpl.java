@@ -1,5 +1,7 @@
 package vn.com.ids.myachef.business.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,12 +25,16 @@ import vn.com.ids.myachef.business.converter.IngredientConverter;
 import vn.com.ids.myachef.business.dto.IngredientDTO;
 import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
+import vn.com.ids.myachef.business.service.DishService;
 import vn.com.ids.myachef.business.service.IngredientCategoryService;
 import vn.com.ids.myachef.business.service.IngredientService;
 import vn.com.ids.myachef.business.service.filehelper.FileStorageService;
 import vn.com.ids.myachef.dao.criteria.IngredientCriteria;
 import vn.com.ids.myachef.dao.criteria.builder.IngredientSpecificationBuilder;
+import vn.com.ids.myachef.dao.enums.DishStatus;
 import vn.com.ids.myachef.dao.enums.Status;
+import vn.com.ids.myachef.dao.model.DishDetailModel;
+import vn.com.ids.myachef.dao.model.DishModel;
 import vn.com.ids.myachef.dao.model.IngredientCategoryModel;
 import vn.com.ids.myachef.dao.model.IngredientModel;
 import vn.com.ids.myachef.dao.repository.IngredientRepository;
@@ -50,6 +56,9 @@ public class IngredientServiceImpl extends AbstractService<IngredientModel, Long
 
     @Autowired
     private IngredientCategoryService ingredientCategoryService;
+    
+    @Autowired
+    private DishService dishService;
 
     protected IngredientServiceImpl(IngredientRepository ingredientRepository) {
         super(ingredientRepository);
@@ -128,8 +137,43 @@ public class IngredientServiceImpl extends AbstractService<IngredientModel, Long
                 }
             }
         }
-
+        
+        
+        
         ingredientModels = saveAll(ingredientModels);
+        
+        // kiểm tra lại món ăn đang thiếu nguyên liệu có nấu lại được chưa //
+        List<DishDetailModel> dishDetailModels = new ArrayList<>();
+        for (IngredientModel ingredientModel : ingredientModels) {
+            if(!CollectionUtils.isEmpty(ingredientModel.getDishDetails())) {
+                dishDetailModels.addAll(ingredientModel.getDishDetails());
+            }
+        }
+        
+        Set<DishModel> dishModels = new HashSet<>();
+        
+        for (DishDetailModel dishDetailModel : dishDetailModels) {
+            if(dishDetailModel.getDish() != null) {
+                dishModels.add(dishDetailModel.getDish());
+            }
+        }
+        
+        if(!CollectionUtils.isEmpty(dishModels)) {
+            for (DishModel dishModel : dishModels) {
+                if(dishModel.getDishStatus() != DishStatus.AVAILABLE) {
+                    dishModel.setDishStatus(DishStatus.AVAILABLE);
+                    if(!CollectionUtils.isEmpty(dishModel.getDishDetails())) {
+                        for (DishDetailModel dishDetailModel : dishModel.getDishDetails()) {
+                            if(dishDetailModel.getQuantity() > dishDetailModel.getIngredient().getQuantity()) {
+                                dishModel.setDishStatus(DishStatus.NOT_ENOUGH_INGREDIENTS);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            dishService.saveAll(new ArrayList<>(dishModels));
+        }
 
         return ingredientConverter.toBasicDTOs(ingredientModels);
     }

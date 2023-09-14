@@ -78,8 +78,8 @@ public class OrderController {
         }
         return orderService.update(orderDTO, orderModel, image);
     }
-    
-    @Operation(summary = "Update")
+
+    @Operation(summary = "Add Dish To Order")
     @PatchMapping(value = "/add-dish/{orderId}")
     public String addDish(@PathVariable Long orderId, @ParameterObject Long dishId) {
         OrderModel orderModel = orderService.findOne(orderId);
@@ -88,8 +88,8 @@ public class OrderController {
         }
         return orderService.addDish(orderModel, dishId);
     }
-    
-    @Operation(summary = "Update")
+
+    @Operation(summary = "Remove Dish To Order")
     @PatchMapping(value = "/remove-dish/{orderId}")
     public String removeDish(@PathVariable Long orderId, @ParameterObject Long dishId) {
         OrderModel orderModel = orderService.findOne(orderId);
@@ -97,6 +97,36 @@ public class OrderController {
             throw new ResourceNotFoundException("Not found order with id: " + orderId);
         }
         return orderService.removeDish(orderModel, dishId);
+    }
+
+    @Operation(summary = "Complete Order")
+    @PatchMapping(value = "/complete/{orderId}")
+    public OrderDTO completeOrder(@PathVariable Long orderId) {
+        OrderModel orderModel = orderService.findOne(orderId);
+        if (orderModel == null) {
+            throw new ResourceNotFoundException("Not found order with id: " + orderId);
+        }
+        return orderService.completeOrder(orderModel);
+    }
+
+    @Operation(summary = "Upload Order Payment")
+    @PatchMapping(value = "/upload-image-payment/{orderId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public OrderDTO uploadImagePayment(@PathVariable Long orderId, @RequestParam(value = "image", required = false) MultipartFile image) {
+        OrderModel orderModel = orderService.findOne(orderId);
+        if (orderModel == null) {
+            throw new ResourceNotFoundException("Not found order with id: " + orderId);
+        }
+        return orderService.uploadImagePayment(orderModel, image);
+    }
+
+    @Operation(summary = "Confirm Order Payment With Bank")
+    @PatchMapping(value = "/confirm-bank-payment/{orderId}")
+    public OrderDTO confirmBankPayment(@PathVariable Long orderId) {
+        OrderModel orderModel = orderService.findOne(orderId);
+        if (orderModel == null) {
+            throw new ResourceNotFoundException("Not found order with id: " + orderId);
+        }
+        return orderService.confirmBankPayment(orderModel);
     }
 
     @Operation(summary = "Delete")

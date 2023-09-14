@@ -211,6 +211,7 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
             orderDetailModel.setStatus(OrderDetailStatus.NOT_FINISHED);
             orderDetailModel.setQuantity(1);
             orderModel.getOrderDetails().add(orderDetailModel);
+            orderDetailModel.setOrder(orderModel);
         } else {
             OrderDetailModel orderDetailModel = orderDetailModels.get(0);
             orderDetailModel.setQuantity(orderDetailModel.getQuantity() + 1);
@@ -252,6 +253,52 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
         save(orderModel);
 
         return "Món ăn này đã được xóa khỏi hóa đơn!";
+    }
+
+    @Override
+    public OrderDTO completeOrder(OrderModel orderModel) {
+        orderModel.setStatus(OrderStatus.PAID);
+        
+        if(!CollectionUtils.isEmpty(orderModel.getOrderDetails())) {
+            for (OrderDetailModel orderDetailModel : orderModel.getOrderDetails()) {
+                orderDetailModel.setStatus(OrderDetailStatus.LEAVED_KITCHEN);
+                orderDetailModel.setOrder(orderModel);
+            }
+        }
+        
+        orderModel.getDinnerTable().setStatus(Status.IN_ACTIVE);
+        
+        orderModel = save(orderModel);
+        
+        return orderConverter.toDTO(orderModel);
+    }
+
+    @Override
+    public OrderDTO uploadImagePayment(OrderModel orderModel, MultipartFile image) {
+        if (image != null) {
+            if (StringUtils.hasText(orderModel.getImagePayment())) {
+                fileStorageService.delete(applicationConfig.getFullIngredientPath() + orderModel.getImagePayment());
+            }
+
+            String prefixName = UUID.randomUUID().toString();
+            String generatedName = String.format("%s%s%s", prefixName, "-", image.getOriginalFilename());
+            fileStorageService.upload(applicationConfig.getFullOrderPath(), generatedName, image);
+            fileStorageService.upload(String.format(applicationConfig.getFullOrderPath(), prefixName), generatedName, image);
+            orderModel.setImagePayment(generatedName);
+        }
+        
+        orderModel = save(orderModel);
+        
+        return orderConverter.toDTO(orderModel);
+    }
+
+    @Override
+    public OrderDTO confirmBankPayment(OrderModel orderModel) {
+        orderModel.setIsPaymentWithBanking(true);
+        
+        orderModel = save(orderModel);
+        
+        return orderConverter.toDTO(orderModel);
     }
 
 }

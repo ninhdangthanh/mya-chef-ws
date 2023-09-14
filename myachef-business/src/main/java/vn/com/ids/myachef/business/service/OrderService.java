@@ -21,4 +21,9 @@ public interface OrderService extends IGenericService<OrderModel, Long> {
 
     String removeDish(OrderModel orderModel, Long dishId);
 
+    OrderDTO completeOrder(OrderModel orderModel);
+
+    OrderDTO uploadImagePayment(OrderModel orderModel, MultipartFile image);
+
+    OrderDTO confirmBankPayment(OrderModel orderModel);
 }

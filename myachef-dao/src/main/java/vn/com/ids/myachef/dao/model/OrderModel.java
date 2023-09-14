@@ -46,6 +46,8 @@ public class OrderModel implements Serializable {
     private Double totalPayment;
 
     private String imagePayment;
+    
+    private Boolean isPaymentWithBanking = false;
 
     @Column(name = "created_date")
     @CreatedDate
