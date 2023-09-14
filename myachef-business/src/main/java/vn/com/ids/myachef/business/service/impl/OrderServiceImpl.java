@@ -300,5 +300,10 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
         
         return orderConverter.toDTO(orderModel);
     }
+    
+    @Override
+    public OrderModel findOrderExistingByDinnerTableId(Long dinnerTableId) {
+        return orderRepository.findOrderExistingByDinnerTableId(dinnerTableId);
+    }
 
 }

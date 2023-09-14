@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import vn.com.ids.myachef.business.converter.DinnerTableConverter;
 import vn.com.ids.myachef.business.dto.DinnerTableDTO;
+import vn.com.ids.myachef.business.dto.DishDTO;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.DinnerTableService;
 import vn.com.ids.myachef.business.validation.group.OnCreate;
@@ -65,6 +66,16 @@ public class DinnerTableController {
             throw new ResourceNotFoundException("Not found dinner model with id: " + id);
         }
         return dinnerTableService.update(dinnerTableDTO, dinnerTableModel);
+    }
+    
+    @Operation(summary = "Get Dish Existing In Dinner Table")
+    @GetMapping(value = "/existing-dish/{id}")
+    public List<DishDTO> getDishExistingInDinnerTable(@PathVariable Long id) {
+        DinnerTableModel dinnerTableModel = dinnerTableService.findOne(id);
+        if (dinnerTableModel == null) {
+            throw new ResourceNotFoundException("Not found dinner model with id: " + id);
+        }
+        return dinnerTableService.getDishExistingInDinnerTable(id);
     }
 
     @Operation(summary = "Delete")

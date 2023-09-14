@@ -26,4 +26,6 @@ public interface OrderService extends IGenericService<OrderModel, Long> {
     OrderDTO uploadImagePayment(OrderModel orderModel, MultipartFile image);
 
     OrderDTO confirmBankPayment(OrderModel orderModel);
+
+    OrderModel findOrderExistingByDinnerTableId(Long dinnerTableId);
 }
