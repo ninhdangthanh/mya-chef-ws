@@ -32,7 +32,7 @@ public class OrderDTO {
 
 	private UserDTO userDTO;
 
-	private List<OrderDetailModel> orderDetails = new ArrayList<>();
+	private List<OrderDetailDTO> orderDetailDTOs = new ArrayList<>();
 	
 	private List<Long> dishIds = new ArrayList<>();
 }

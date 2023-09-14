@@ -35,6 +35,8 @@ public class OrderDetailModel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private Integer quantity;
 
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)

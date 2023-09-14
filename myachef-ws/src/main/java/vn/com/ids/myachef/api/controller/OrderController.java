@@ -78,6 +78,26 @@ public class OrderController {
         }
         return orderService.update(orderDTO, orderModel, image);
     }
+    
+    @Operation(summary = "Update")
+    @PatchMapping(value = "/add-dish/{orderId}")
+    public String addDish(@PathVariable Long orderId, @ParameterObject Long dishId) {
+        OrderModel orderModel = orderService.findOne(orderId);
+        if (orderModel == null) {
+            throw new ResourceNotFoundException("Not found order with id: " + orderId);
+        }
+        return orderService.addDish(orderModel, dishId);
+    }
+    
+    @Operation(summary = "Update")
+    @PatchMapping(value = "/remove-dish/{orderId}")
+    public String removeDish(@PathVariable Long orderId, @ParameterObject Long dishId) {
+        OrderModel orderModel = orderService.findOne(orderId);
+        if (orderModel == null) {
+            throw new ResourceNotFoundException("Not found order with id: " + orderId);
+        }
+        return orderService.removeDish(orderModel, dishId);
+    }
 
     @Operation(summary = "Delete")
     @DeleteMapping

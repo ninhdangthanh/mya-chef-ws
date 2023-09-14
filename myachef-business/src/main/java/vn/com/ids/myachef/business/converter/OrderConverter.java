@@ -25,11 +25,28 @@ public class OrderConverter {
 
     @Autowired
     private ApplicationConfig applicationConfig;
+    
+    @Autowired
+    private DinnerTableConverter dinnerTableConverter;
+    
+    @Autowired
+    private OrderDetailConverter orderDetailConverter;
 
     public OrderDTO toBasicDTO(OrderModel orderModel) {
         OrderDTO orderDTO = mapper.map(orderModel, OrderDTO.class);
-        if (StringUtils.hasText(orderDTO.getImagePayment()) && !orderDTO.getImagePayment().startsWith("https://pos.nvncdn.net")) {
+        if (StringUtils.hasText(orderModel.getImagePayment()) && !orderModel.getImagePayment().startsWith("https://pos.nvncdn.net")) {
             orderDTO.setImagePayment(fileUploadService.getFilePath(applicationConfig.getOrderPath(), orderModel.getImagePayment()));
+        }
+        return orderDTO;
+    }
+    
+    public OrderDTO toDTO(OrderModel orderModel) {
+        OrderDTO orderDTO = toBasicDTO(orderModel);
+        if(orderModel.getDinnerTable() != null) {
+            orderDTO.setDinnerTableDTO(dinnerTableConverter.toBasicDTO(orderModel.getDinnerTable()));
+        }
+        if(orderModel.getOrderDetails() != null) {
+            orderDTO.setOrderDetailDTOs(orderDetailConverter.toBasicDTOs(orderModel.getOrderDetails()));
         }
         return orderDTO;
     }

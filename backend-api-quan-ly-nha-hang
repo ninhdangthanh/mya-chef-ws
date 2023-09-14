@@ -24,6 +24,7 @@ bàn
 
 hóa đơn
 -Thêm sửa xóa
+- Lúc tạo hóa đơn thì chưa thêm món ăn, món ăn thêm sau
 -Thêm món ăn vào hóa đơn
 -Xóa món ăn khỏi hóa đơn(khi nó chưa được nấu)
 ---- khi thêm hoặc xóa món ăn khỏi hóa đơn thì nguyên liệu sẽ được thêm lại hoặc lấy ra và sửa lại status món ăn đó có thể đặt không

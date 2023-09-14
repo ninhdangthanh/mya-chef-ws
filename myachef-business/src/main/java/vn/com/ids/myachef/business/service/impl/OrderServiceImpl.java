@@ -1,5 +1,6 @@
 package vn.com.ids.myachef.business.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.DinnerTableService;
 import vn.com.ids.myachef.business.service.DishService;
+import vn.com.ids.myachef.business.service.IngredientService;
 import vn.com.ids.myachef.business.service.OrderService;
 import vn.com.ids.myachef.business.service.UserService;
 import vn.com.ids.myachef.business.service.filehelper.FileStorageService;
@@ -32,50 +34,58 @@ import vn.com.ids.myachef.dao.enums.OrderDetailStatus;
 import vn.com.ids.myachef.dao.enums.OrderStatus;
 import vn.com.ids.myachef.dao.enums.Status;
 import vn.com.ids.myachef.dao.model.DinnerTableModel;
+import vn.com.ids.myachef.dao.model.DishDetailModel;
 import vn.com.ids.myachef.dao.model.DishModel;
+import vn.com.ids.myachef.dao.model.IngredientModel;
 import vn.com.ids.myachef.dao.model.OrderDetailModel;
 import vn.com.ids.myachef.dao.model.OrderModel;
 import vn.com.ids.myachef.dao.model.UserModel;
+import vn.com.ids.myachef.dao.repository.OrderDetailRepository;
 import vn.com.ids.myachef.dao.repository.OrderRepository;
 
 @Service
 @Transactional
 public class OrderServiceImpl extends AbstractService<OrderModel, Long> implements OrderService {
 
-	private OrderRepository orderRepository;
-	
-	@Autowired
-	private OrderConverter orderConverter;
-	
-	@Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderConverter orderConverter;
+
+    @Autowired
     private FileStorageService fileStorageService;
 
     @Autowired
     private ApplicationConfig applicationConfig;
-    
+
     @Autowired
     private DinnerTableService dinnerTableService;
-    
+
     @Autowired
     private DishService dishService;
-    
+
     @Autowired
     private UserService userService;
 
-	protected OrderServiceImpl(OrderRepository orderRepository) {
-		super(orderRepository);
-		this.orderRepository = orderRepository;
-	}
+    @Autowired
+    private IngredientService ingredientService;
 
-	public Specification<OrderModel> buildSpecification(OrderCriteria orderCriteria) {
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    protected OrderServiceImpl(OrderRepository orderRepository) {
+        super(orderRepository);
+        this.orderRepository = orderRepository;
+    }
+
+    public Specification<OrderModel> buildSpecification(OrderCriteria orderCriteria) {
         return (root, criteriaQuery, criteriaBuilder) //
         -> new OrderSpecificationBuilder(root, criteriaBuilder) //
                 .setStatus(orderCriteria.getStatus()) //
                 .setTotalPayment(orderCriteria.getTotalPayment()) //
-                .setImagePayment(orderCriteria.getImagePayment())
-                .build();
+                .setImagePayment(orderCriteria.getImagePayment()).build();
     }
-	
+
     @Override
     public Page<OrderModel> findAll(OrderCriteria orderCriteria) {
         Specification<OrderModel> specification = buildSpecification(orderCriteria);
@@ -86,50 +96,36 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
     @Override
     public OrderDTO create(@Valid OrderDTO orderDTO) {
         OrderModel orderModel = orderConverter.toBasicModel(orderDTO);
-        
+
         // dinner table //
-        if(orderDTO.getDinnerTableId() == null || orderDTO.getDinnerTableId() <= 0) {
+        if (orderDTO.getDinnerTableId() == null || orderDTO.getDinnerTableId() <= 0) {
             throw new BadRequestException("Dinner table id must be not null and <= 0");
         }
-        
+
         DinnerTableModel dinnerTableModel = dinnerTableService.findOne(orderDTO.getDinnerTableId());
-        if(dinnerTableModel == null) {
+        if (dinnerTableModel == null) {
             throw new BadRequestException("Not found dinner table with id: " + orderDTO.getDinnerTableId());
         }
-        if(dinnerTableModel.getStatus() == Status.ACTIVE) {
+        if (dinnerTableModel.getStatus() == Status.ACTIVE) {
             throw new BadRequestException("Dinner table already used");
         }
         dinnerTableModel.setStatus(Status.ACTIVE);
         orderModel.setDinnerTable(dinnerTableModel);
-        
+
         // user //
-        if(orderDTO.getUserId() == null || orderDTO.getUserId() <= 0) {
+        if (orderDTO.getUserId() == null || orderDTO.getUserId() <= 0) {
             throw new BadRequestException("User id must be not null and <= 0");
         }
         UserModel userModel = userService.findOne(orderDTO.getUserId());
-        if(userModel == null) {
+        if (userModel == null) {
             throw new ResourceNotFoundException("Not found user with id: " + orderDTO.getUserId());
         }
         orderModel.setUser(userModel);
-        
-        // dish //
-        if(!CollectionUtils.isEmpty(orderDTO.getDishIds())) {
-            List<DishModel> dishModels = dishService.findAllById(orderDTO.getDishIds());
-            if(!CollectionUtils.isEmpty(dishModels)) {
-                List<OrderDetailModel> orderDetailModels = dishModels.stream().map(dish -> {
-                    OrderDetailModel orderDetailModel = new OrderDetailModel();
-                    orderDetailModel.setDish(dish);
-                    orderDetailModel.setStatus(OrderDetailStatus.NOT_FINISHED);
-                    return orderDetailModel;
-                }).collect(Collectors.toList());
-                orderModel.setOrderDetails(orderDetailModels);
-            }
-        }
-        
+
         orderModel.setStatus(OrderStatus.UNPAID);
         calculate(orderModel);
         orderModel = save(orderModel);
-        return orderConverter.toBasicDTO(orderModel);
+        return orderConverter.toDTO(orderModel);
     }
 
     @Override
@@ -148,17 +144,17 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
 
         orderConverter.mapDataToUpdate(orderModel, orderDTO);
 
-        if(orderDTO.getDinnerTableId() != null && orderDTO.getDinnerTableId() > 0) {
+        if (orderDTO.getDinnerTableId() != null && orderDTO.getDinnerTableId() > 0) {
             DinnerTableModel dinnerTableModel = dinnerTableService.findOne(orderDTO.getDinnerTableId());
-            if(dinnerTableModel == null) {
+            if (dinnerTableModel == null) {
                 throw new ResourceNotFoundException("Not found dinner table with id: " + orderDTO.getDinnerTableId());
             }
             orderModel.setDinnerTable(dinnerTableModel);
         }
-        
-        if(orderDTO.getUserId() != null && orderDTO.getUserId() > 0) {
+
+        if (orderDTO.getUserId() != null && orderDTO.getUserId() > 0) {
             UserModel userModel = userService.findOne(orderDTO.getUserId());
-            if(userModel == null) {
+            if (userModel == null) {
                 throw new ResourceNotFoundException("Not found user with id: " + orderDTO.getUserId());
             }
             orderModel.setUser(userModel);
@@ -169,13 +165,93 @@ public class OrderServiceImpl extends AbstractService<OrderModel, Long> implemen
 
         return orderConverter.toBasicDTO(orderModel);
     }
-    
+
     public void calculate(OrderModel orderModel) {
-        if(!CollectionUtils.isEmpty(orderModel.getOrderDetails())) {
+        if (!CollectionUtils.isEmpty(orderModel.getOrderDetails())) {
             List<DishModel> dishs = orderModel.getOrderDetails().stream().map(OrderDetailModel::getDish).collect(Collectors.toList());
             Double totalAmount = dishs.stream().mapToDouble(DishModel::getPrice).sum();
             orderModel.setTotalPayment(totalAmount);
         }
+    }
+
+    @Override
+    public String addDish(OrderModel orderModel, Long dishId) {
+        DishModel dishModel = dishService.findOne(dishId);
+        if (dishModel == null) {
+            throw new BadRequestException("Not found dish with id: " + dishId);
+        }
+        // xử lý trừ nguyên liệu - start //
+        List<DishDetailModel> dishDetailModels = dishModel.getDishDetails();
+        if (!CollectionUtils.isEmpty(dishDetailModels)) {
+            List<IngredientModel> ingredientsWillChangeQuantity = new ArrayList<>();
+            for (DishDetailModel dishDetailModel : dishDetailModels) {
+                IngredientModel ingredientModel = dishDetailModel.getIngredient();
+                if (ingredientModel.getQuantity() < dishDetailModel.getQuantity()) {
+                    // thiếu nguyên liệu
+                    ingredientModel.setStatus(Status.IN_ACTIVE);
+                    ingredientService.save(ingredientModel);
+                    throw new BadRequestException("Món ăn này hiện tại không đủ nguyên liệu!");
+                } else {
+                    // đủ nguyên liệu
+                    ingredientModel.setQuantity(ingredientModel.getQuantity() - dishDetailModel.getQuantity());
+                    ingredientsWillChangeQuantity.add(ingredientModel);
+                }
+            }
+            if (!CollectionUtils.isEmpty(ingredientsWillChangeQuantity)) {
+                ingredientService.saveAll(ingredientsWillChangeQuantity);
+            }
+        }
+        // xử lý trừ nguyên liệu - end //
+
+        // xử lý thêm vào món ăn sẵn có trong hóa đơn hoặc tạo món ăn mới //
+        List<OrderDetailModel> orderDetailModels = orderDetailRepository.findByOrderIdAndDishId(orderModel.getId(), dishId);
+        if (CollectionUtils.isEmpty(orderDetailModels)) {
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            orderDetailModel.setDish(dishModel);
+            orderDetailModel.setStatus(OrderDetailStatus.NOT_FINISHED);
+            orderDetailModel.setQuantity(1);
+            orderModel.getOrderDetails().add(orderDetailModel);
+        } else {
+            OrderDetailModel orderDetailModel = orderDetailModels.get(0);
+            orderDetailModel.setQuantity(orderDetailModel.getQuantity() + 1);
+        }
+
+        save(orderModel);
+
+        return "Món ăn này đã được thêm vào hóa đơn!";
+    }
+
+    @Override
+    public String removeDish(OrderModel orderModel, Long dishId) {
+        List<OrderDetailModel> orderDetailModels = orderDetailRepository.findByOrderIdAndDishId(orderModel.getId(), dishId);
+
+        if (CollectionUtils.isEmpty(orderDetailModels)) {
+            throw new BadRequestException("Món ăn này hiện không sẵn có trong hóa đơn!");
+        }
+
+        OrderDetailModel orderDetailModel = orderDetailModels.get(0);
+
+        if (orderDetailModel.getStatus() != OrderDetailStatus.NOT_FINISHED) {
+            throw new BadRequestException("Món ăn này đã được chế biến nên không thể xóa khỏi hóa đơn!");
+        }
+
+        DishModel dishModel = orderDetailModel.getDish();
+
+        List<IngredientModel> reverseIngredients = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(dishModel.getDishDetails())) {
+            for (DishDetailModel dishDetailModel : dishModel.getDishDetails()) {
+                IngredientModel ingredientModel = dishDetailModel.getIngredient();
+                ingredientModel.setQuantity(ingredientModel.getQuantity() + dishDetailModel.getQuantity());
+                reverseIngredients.add(ingredientModel);
+            }
+            ingredientService.saveAll(reverseIngredients);
+        }
+
+        orderModel.getOrderDetails().remove(orderDetailModel);
+
+        save(orderModel);
+
+        return "Món ăn này đã được xóa khỏi hóa đơn!";
     }
 
 }

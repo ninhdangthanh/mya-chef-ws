@@ -17,4 +17,8 @@ public interface OrderService extends IGenericService<OrderModel, Long> {
 
     OrderDTO update(@Valid OrderDTO orderDTO, OrderModel orderModel, MultipartFile image);
 
+    String addDish(OrderModel orderModel, Long dishId);
+
+    String removeDish(OrderModel orderModel, Long dishId);
+
 }
