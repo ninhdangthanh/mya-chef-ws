@@ -38,6 +38,7 @@ public class ApplicationConfig {
     private static final String INGREDIENT = "ingredient/";
     private static final String DISH_CATEGORY = "dish-category/";
     private static final String DISH = "dish/";
+    private static final String USER = "user/";
 
     // upload file
     @Value("${app.storage.path}")
@@ -325,6 +326,14 @@ public class ApplicationConfig {
 
     public String getDishPath() {
         return DISH;
+    }
+    
+    public String getFullUserPath() {
+        return fileUploadPath + USER;
+    }
+
+    public String getUserPath() {
+        return USER;
     }
     
     public String getOrderPath() {

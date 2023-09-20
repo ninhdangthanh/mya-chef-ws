@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import vn.com.ids.myachef.business.config.ApplicationConfig;
 import vn.com.ids.myachef.business.dto.UserDTO;
+import vn.com.ids.myachef.business.service.FileUploadService;
 import vn.com.ids.myachef.dao.enums.UserStatus;
 import vn.com.ids.myachef.dao.model.UserModel;
 
@@ -22,9 +24,19 @@ public class UserConverter {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+    
+    @Autowired
+    private FileUploadService fileUploadService;
+
+    @Autowired
+    private ApplicationConfig applicationConfig;
 
     public UserDTO toBasicDTO(UserModel userModel) {
-        return mapper.map(userModel, UserDTO.class);
+        UserDTO userDTO = mapper.map(userModel, UserDTO.class);
+        if (StringUtils.hasText(userDTO.getAvatarFile()) && !userDTO.getAvatarFile().startsWith("https://pos.nvncdn.net")) {
+            userDTO.setAvatarFile(fileUploadService.getFilePath(applicationConfig.getUserPath(), userDTO.getAvatarFile()));
+        }
+        return userDTO;
     }
 
     public List<UserDTO> toBasicDTOs(List<UserModel> userModels) {
