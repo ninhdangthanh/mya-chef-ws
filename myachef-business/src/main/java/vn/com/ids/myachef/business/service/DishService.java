@@ -1,5 +1,7 @@
 package vn.com.ids.myachef.business.service;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -16,5 +18,7 @@ public interface DishService extends IGenericService<DishModel, Long> {
     DishDTO create(@Valid DishDTO dishDTO, MultipartFile image);
 
     DishDTO update(@Valid DishDTO dishDTO, DishModel dishModel, MultipartFile image);
+    
+    List<DishModel> findByDishCategoryId(Long id);
 
 }

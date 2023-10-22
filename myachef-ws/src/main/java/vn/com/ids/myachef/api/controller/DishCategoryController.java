@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +25,14 @@ import vn.com.ids.myachef.business.converter.DishCategoryConverter;
 import vn.com.ids.myachef.business.converter.IngredientCategoryConverter;
 import vn.com.ids.myachef.business.dto.DishCategoryDTO;
 import vn.com.ids.myachef.business.dto.IngredientCategoryDTO;
+import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.service.DishCategoryService;
+import vn.com.ids.myachef.business.service.DishService;
 import vn.com.ids.myachef.business.service.IngredientCategoryService;
 import vn.com.ids.myachef.business.validation.group.OnCreate;
 import vn.com.ids.myachef.dao.model.DishCategoryModel;
+import vn.com.ids.myachef.dao.model.DishModel;
 import vn.com.ids.myachef.dao.model.IngredientCategoryModel;
 
 @RestController
@@ -40,6 +44,9 @@ public class DishCategoryController {
 	
 	@Autowired
 	private DishCategoryConverter dishCategoryConverter;
+
+	@Autowired
+    private DishService dishService;
 	
 	@Operation(summary = "Get all")
     @GetMapping("/search")
@@ -77,6 +84,10 @@ public class DishCategoryController {
 	@Operation(summary = "Delete")
     @DeleteMapping
     public void delete(@RequestParam Long id) {
+		List<DishModel> dishModels = dishService.findByDishCategoryId(id);
+	    if(!CollectionUtils.isEmpty(dishModels)) {
+	        throw new BadRequestException("Vui lòng xóa hết các món ăn để xóa danh mục");
+	    }
 	    dishCategoryService.deleteById(id);
 	}
 }

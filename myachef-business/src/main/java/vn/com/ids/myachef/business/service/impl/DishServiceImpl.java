@@ -165,4 +165,8 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
         return dishConverter.toBasicDTO(dishModel);
     }
 
+    public List<DishModel> findByDishCategoryId(Long id) {
+        return dishRepository.findByDishCategoryId(id);
+    }
+
 }
