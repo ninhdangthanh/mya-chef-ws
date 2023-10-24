@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import vn.com.ids.myachef.api.security.SecurityContextService;
 import vn.com.ids.myachef.api.security.jwt.JWTTokenService;
+import vn.com.ids.myachef.api.security.jwt.JwtFilterErrorReponse;
 import vn.com.ids.myachef.api.security.jwt.JWTTokenService.JwtTokenType;
 import vn.com.ids.myachef.api.security.request.AppLoginRequest;
 import vn.com.ids.myachef.api.security.request.WebLoginRequest;
@@ -24,6 +25,7 @@ import vn.com.ids.myachef.api.security.response.JwtResponse;
 import vn.com.ids.myachef.api.security.response.RefreshTokenResponse;
 import vn.com.ids.myachef.api.security.userdetails.UserDetailsImpl;
 import vn.com.ids.myachef.business.config.ApplicationConfig;
+import vn.com.ids.myachef.business.exception.error.BadRequestException;
 import vn.com.ids.myachef.business.exception.error.ResourceNotFoundException;
 import vn.com.ids.myachef.business.exception.error.UnauthorizedException;
 import vn.com.ids.myachef.business.service.UserService;
@@ -140,6 +142,33 @@ public class AuthenticationController {
 
         log.info("Log out for User with username: {} successful!", userDetails.getUsername());
         return "Log out successful!";
+    }
+    
+    @PostMapping("/check-valid-token")
+    public boolean checkValidToken(@RequestBody @NotBlank String jwtToken) {
+        
+        if (jwtTokenService.validateJwtToken(jwtToken)) {
+            throw new BadRequestException("Invalid JWT token.");
+        }
+        if (jwtTokenService.isTokenExpired(jwtToken)) {
+            throw new BadRequestException("JWT token is expired.");
+        }
+
+        Long userId = jwtTokenService.getUserId(jwtToken);
+        UserDetailsImpl userDetails = null;
+        if (UserDetailsImpl.CUSTOMER_ROLE.equals(jwtTokenService.getType(jwtToken))) {
+        } else {
+            UserModel userModel = userService.findOne(userId);
+            if (userModel == null || userModel.getStatus() != UserStatus.ACTIVE) {
+                throw new ResourceNotFoundException("User not found or In_valid User");
+            }
+        }
+
+        if (userDetails == null) {
+            throw new BadRequestException("UserDetails is null.");
+        }
+        
+        return true;
     }
 
 }

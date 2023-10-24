@@ -66,8 +66,8 @@ public class DishConverter {
         if (dto.getStatus() != null) {
             model.setStatus(dto.getStatus());
         }
-        if (dto.getDichStatus() != null) {
-            model.setDishStatus(dto.getDichStatus());
+        if (dto.getDishStatus() != null) {
+            model.setDishStatus(dto.getDishStatus());
         }
         if (dto.getPrice() != null && dto.getPrice() >= 0) {
             model.setPrice(dto.getPrice());

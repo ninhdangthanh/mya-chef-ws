@@ -83,8 +83,8 @@ public class IngredientServiceImpl extends AbstractService<IngredientModel, Long
         if (image != null) {
             String prefixName = UUID.randomUUID().toString();
             String generatedName = String.format("%s%s%s", prefixName, "-", image.getOriginalFilename());
-            fileStorageService.upload(applicationConfig.getFullIngredientCategoryPath(), generatedName, image);
-            fileStorageService.upload(String.format(applicationConfig.getFullIngredientCategoryPath(), prefixName), generatedName, image);
+            fileStorageService.upload(applicationConfig.getFullIngredientPath(), generatedName, image);
+            fileStorageService.upload(String.format(applicationConfig.getFullIngredientPath(), prefixName), generatedName, image);
             ingredientModel.setImage(generatedName);
         }
 

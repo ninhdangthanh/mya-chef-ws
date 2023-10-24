@@ -32,7 +32,7 @@ public class DishDTO {
 
 	private Status status;
 
-	private DishStatus dichStatus;
+	private DishStatus dishStatus;
 
 	private List<DishDetailDTO> dishDetailDTOs = new ArrayList<>();
 

@@ -47,46 +47,46 @@ public class UserController {
     @Autowired
     private UserConverter userConverter;
 
-    @Operation(summary = "Find by criteria")
-    @GetMapping("/search")
-    public Page<UserDTO> getAll(@ParameterObject UserCriteria userCriteria) {
-        Page<UserModel> page = userService.findAll(userCriteria);
-        List<UserDTO> userDTOs = userConverter.toBasicDTOs(page.getContent());
-        Pageable pageable = PageRequest.of(userCriteria.getPageIndex(), userCriteria.getPageSize());
-        return new PageImpl<>(userDTOs, pageable, page.getTotalElements());
-    }
-
-    @Operation(summary = "Find by id")
-    @GetMapping("/{id}")
-    public UserDTO findById(@PathVariable Long id) {
-        UserModel userModel = userService.findOne(id);
-        if (userModel == null) {
-            throw new ResourceNotFoundException("Not found user with id: " + id);
-        }
-        return userConverter.toBasicDTO(userModel);
-    }
-
+//    @Operation(summary = "Find by criteria")
+//    @GetMapping("/search")
+//    public Page<UserDTO> getAll(@ParameterObject UserCriteria userCriteria) {
+//        Page<UserModel> page = userService.findAll(userCriteria);
+//        List<UserDTO> userDTOs = userConverter.toBasicDTOs(page.getContent());
+//        Pageable pageable = PageRequest.of(userCriteria.getPageIndex(), userCriteria.getPageSize());
+//        return new PageImpl<>(userDTOs, pageable, page.getTotalElements());
+//    }
+//
+//    @Operation(summary = "Find by id")
+//    @GetMapping("/{id}")
+//    public UserDTO findById(@PathVariable Long id) {
+//        UserModel userModel = userService.findOne(id);
+//        if (userModel == null) {
+//            throw new ResourceNotFoundException("Not found user with id: " + id);
+//        }
+//        return userConverter.toBasicDTO(userModel);
+//    }
+//
     @Operation(summary = "Create")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Validated(OnCreate.class)
     public UserDTO create(@Valid @RequestPart UserDTO userDTO, @RequestParam(value = "image", required = false) MultipartFile image) {
         return userService.create(userDTO, image);
     }
-
-    @Operation(summary = "Update")
-    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UserDTO update(@PathVariable Long id, @Valid @RequestPart UserDTO userDTO, @RequestParam(value = "image", required = false) MultipartFile image) {
-        UserModel userModel = userService.findOne(id);
-        if (userModel == null) {
-            throw new ResourceNotFoundException("Not found user with id: " + id);
-        }
-        return userService.update(userDTO, userModel, image);
-    }
-
-    @Operation(summary = "Delete")
-    @DeleteMapping
-    public void delete(@RequestParam Long id) {
-        userService.deleteById(id);
-    }
+//
+//    @Operation(summary = "Update")
+//    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public UserDTO update(@PathVariable Long id, @Valid @RequestPart UserDTO userDTO, @RequestParam(value = "image", required = false) MultipartFile image) {
+//        UserModel userModel = userService.findOne(id);
+//        if (userModel == null) {
+//            throw new ResourceNotFoundException("Not found user with id: " + id);
+//        }
+//        return userService.update(userDTO, userModel, image);
+//    }
+//
+//    @Operation(summary = "Delete")
+//    @DeleteMapping
+//    public void delete(@RequestParam Long id) {
+//        userService.deleteById(id);
+//    }
 
 }
