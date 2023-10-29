@@ -35,6 +35,7 @@ import vn.com.ids.myachef.dao.model.DishCategoryModel;
 import vn.com.ids.myachef.dao.model.DishDetailModel;
 import vn.com.ids.myachef.dao.model.DishModel;
 import vn.com.ids.myachef.dao.model.IngredientModel;
+import vn.com.ids.myachef.dao.repository.DishDetailRepository;
 import vn.com.ids.myachef.dao.repository.DishRepository;
 
 @Service
@@ -57,6 +58,9 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
 
     @Autowired
     private DishCategoryService dishCategoryService;
+    
+    @Autowired
+    private DishDetailRepository dishDetailRepository;
 
     protected DishServiceImpl(DishRepository dishRepository) {
         super(dishRepository);
@@ -106,12 +110,12 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
         }
         
         boolean avalable = true;
+        List<DishDetailModel> dishDetailModels = new ArrayList<>();
         if(dishDTO.getDishDetailHashMap().keySet() != null) {
             Map<Long, Double> dishDetailHashMap = dishDTO.getDishDetailHashMap();
             List<IngredientModel> ingredientModels = ingredientService.findByIdIn(dishDetailHashMap.keySet());
             Map<Long, IngredientModel> ingredientModelHashMaps = ingredientModels.stream().collect(Collectors.toMap(IngredientModel::getId, Function.identity()));
-                    
-            List<DishDetailModel> dishDetailModels = new ArrayList<>();
+            
             for(Long ingredientId : dishDetailHashMap.keySet()) {
                  IngredientModel ingredientModel = ingredientModelHashMaps.get(ingredientId);
                  if(ingredientModel == null) {
@@ -129,6 +133,7 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
                          avalable = false;
                      }
                  }
+                 dishDetailModel.setDish(dishModel);
                  dishDetailModels.add(dishDetailModel);
             }
             dishModel.setDishDetails(dishDetailModels);
@@ -141,12 +146,53 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
             dishModel.setDishStatus(DishStatus.NOT_ENOUGH_INGREDIENTS);
         }
         dishModel = save(dishModel);
-
+        
         return dishConverter.toBasicDTO(dishModel);
     }
 
     @Override
     public DishDTO update(@Valid DishDTO dishDTO, DishModel dishModel, MultipartFile image) {
+//     // update dish detail -start
+//        List<DishDetailModel> currentDishDetailModels = dishDetailRepository.findByDishId(dishModel.getId());
+//        if(currentDishDetailModels != null) {
+//            dishDetailRepository.deleteByDishId(dishModel.getId());
+//        }
+//        boolean avalable = true;
+//        List<DishDetailModel> dishDetailModels = new ArrayList<>();
+//        if(dishDTO.getDishDetailHashMap().keySet() != null) {
+//            Map<Long, Double> dishDetailHashMap = dishDTO.getDishDetailHashMap();
+//            List<IngredientModel> ingredientModels = ingredientService.findByIdIn(dishDetailHashMap.keySet());
+//            Map<Long, IngredientModel> ingredientModelHashMaps = ingredientModels.stream().collect(Collectors.toMap(IngredientModel::getId, Function.identity()));
+//            
+//            for(Long ingredientId : dishDetailHashMap.keySet()) {
+//                 IngredientModel ingredientModel = ingredientModelHashMaps.get(ingredientId);
+//                 if(ingredientModel == null) {
+//                     continue;
+//                 }
+//                 DishDetailModel dishDetailModel = new DishDetailModel();
+//                 dishDetailModel.setIngredient(ingredientModel);
+//                 dishDetailModel.setStatus(Status.ACTIVE);
+//                 if(dishDetailHashMap.get(ingredientId) == null || 
+//                         dishDetailHashMap.get(ingredientId) <= 0) {
+//                     dishDetailModel.setQuantity(0.0);
+//                 } else {
+//                     dishDetailModel.setQuantity(dishDetailHashMap.get(ingredientId));
+//                     if(dishDetailHashMap.get(ingredientId) > ingredientModel.getQuantity()) {
+//                         avalable = false;
+//                     }
+//                 }
+//                 dishDetailModel.setDish(dishModel);
+//                 dishDetailModels.add(dishDetailModel);
+//            }
+//            dishModel.setDishDetails(dishDetailModels);
+//        }
+//            if(avalable) {
+//                dishModel.setDishStatus(DishStatus.AVAILABLE);
+//            } else {
+//                dishModel.setDishStatus(DishStatus.NOT_ENOUGH_INGREDIENTS);
+//            }
+//        // update dish detail -end
+        
         if (image != null) {
             if (StringUtils.hasText(dishModel.getImage())) {
                 fileStorageService.delete(applicationConfig.getFullDishPath() + dishModel.getImage());
@@ -168,6 +214,8 @@ public class DishServiceImpl extends AbstractService<DishModel, Long> implements
             }
             dishModel.setDishCategory(dishCategoryModel);
         }
+        
+        dishModel.setStatus(Status.ACTIVE);
 
         dishModel = save(dishModel);
 

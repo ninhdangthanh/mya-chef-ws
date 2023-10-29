@@ -70,7 +70,6 @@ public class DishModel implements Serializable {
     @Enumerated(EnumType.STRING)
     private DishStatus dishStatus;
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishDetailModel> dishDetails = new ArrayList<>();
     
