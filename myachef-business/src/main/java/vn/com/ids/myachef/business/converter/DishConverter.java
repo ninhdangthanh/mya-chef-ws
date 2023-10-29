@@ -12,9 +12,11 @@ import org.springframework.util.StringUtils;
 import vn.com.ids.myachef.business.config.ApplicationConfig;
 import vn.com.ids.myachef.business.dto.DishCategoryDTO;
 import vn.com.ids.myachef.business.dto.DishDTO;
+import vn.com.ids.myachef.business.dto.DishDetailDTO;
 import vn.com.ids.myachef.business.service.FileUploadService;
 import vn.com.ids.myachef.dao.enums.DishStatus;
 import vn.com.ids.myachef.dao.model.DishCategoryModel;
+import vn.com.ids.myachef.dao.model.DishDetailModel;
 import vn.com.ids.myachef.dao.model.DishModel;
 
 @Component
@@ -28,6 +30,9 @@ public class DishConverter {
 
     @Autowired
     private ApplicationConfig applicationConfig;
+    
+    @Autowired
+    private DishDetailConverter dishDetailConverter;
 
     public DishDTO toBasicDTO(DishModel dishModel) {
         DishDTO dishDTO = mapper.map(dishModel, DishDTO.class);
@@ -53,6 +58,13 @@ public class DishConverter {
 
     public DishDTO toDTO(DishModel dishModel) {
         DishDTO dishDTO = toBasicDTO(dishModel);
+        List<DishDetailDTO> dishDetailDTOs = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(dishModel.getDishDetails())) {
+            for (DishDetailModel dishDetailModel : dishModel.getDishDetails()) {
+                dishDetailDTOs.add(dishDetailConverter.toDTO(dishDetailModel));
+            }
+        }
+        dishDTO.setDishDetailDTOs(dishDetailDTOs);
         return dishDTO;
     }
 

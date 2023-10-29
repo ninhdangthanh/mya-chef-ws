@@ -13,6 +13,7 @@ import vn.com.ids.myachef.business.config.ApplicationConfig;
 import vn.com.ids.myachef.business.dto.DishCategoryDTO;
 import vn.com.ids.myachef.business.dto.DishDTO;
 import vn.com.ids.myachef.business.dto.DishDetailDTO;
+import vn.com.ids.myachef.business.dto.IngredientDTO;
 import vn.com.ids.myachef.business.service.FileUploadService;
 import vn.com.ids.myachef.dao.enums.DishStatus;
 import vn.com.ids.myachef.dao.model.DishCategoryModel;
@@ -25,6 +26,9 @@ public class DishDetailConverter {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private IngredientConverter ingredientConverter;
+    
     public DishDetailDTO toBasicDTO(DishDetailModel dishDetailModel) {
         DishDetailDTO dishDetailDTO = mapper.map(dishDetailModel, DishDetailDTO.class);
         return dishDetailDTO;
@@ -45,8 +49,10 @@ public class DishDetailConverter {
     }
 
     public DishDetailDTO toDTO(DishDetailModel dishDetailModel) {
-        DishDetailDTO dishDTO = toBasicDTO(dishDetailModel);
-        return dishDTO;
+        DishDetailDTO dishDetailDTO = toBasicDTO(dishDetailModel);
+        IngredientDTO ingredientDTO = ingredientConverter.toBasicDTO(dishDetailModel.getIngredient());
+        dishDetailDTO.setIngredientDTO(ingredientDTO);
+        return dishDetailDTO;
     }
 
     public void mapDataToUpdate(DishDetailModel model, DishDetailDTO dto) {

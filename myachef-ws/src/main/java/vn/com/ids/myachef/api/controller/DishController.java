@@ -58,7 +58,7 @@ public class DishController {
         if (dishModel == null) {
             throw new ResourceNotFoundException("Not found dish with id: " + id);
         }
-        return dishConverter.toBasicDTO(dishModel);
+        return dishConverter.toDTO(dishModel);
     }
 
     @Operation(summary = "Create")
