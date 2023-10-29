@@ -53,11 +53,19 @@ public class IngredientController {
 
     @Operation(summary = "Find by criteria")
     @GetMapping("/search")
-    public Page<IngredientDTO> getAll(@ParameterObject IngredientCriteria ingredientCriteria) {
+    public Page<IngredientDTO> find(@ParameterObject IngredientCriteria ingredientCriteria) {
         Page<IngredientModel> page = ingredientService.findAll(ingredientCriteria);
         List<IngredientDTO> ingredientDTOs = ingredientConverter.toBasicDTOs(page.getContent());
         Pageable pageable = PageRequest.of(ingredientCriteria.getPageIndex(), ingredientCriteria.getPageSize());
         return new PageImpl<>(ingredientDTOs, pageable, page.getTotalElements());
+    }
+    
+    @Operation(summary = "Get all")
+    @GetMapping("/get-all")
+    public List<IngredientDTO> getAll() {
+        List<IngredientModel> ingredientModels = ingredientService.findAll();
+        List<IngredientDTO> ingredientDTOs = ingredientConverter.toBasicDTOs(ingredientModels);
+        return ingredientDTOs;
     }
 
     @Operation(summary = "Find by id")

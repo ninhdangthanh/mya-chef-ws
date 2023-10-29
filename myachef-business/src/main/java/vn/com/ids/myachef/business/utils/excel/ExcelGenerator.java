@@ -74,7 +74,7 @@ public class ExcelGenerator {
             workbook.close();
             return new ByteArrayInputStream(out.toByteArray());
         } catch (Exception e) {
-
+            System.out.print("Export file exception: " + e);
         }
         return null;
     }
