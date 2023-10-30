@@ -20,9 +20,6 @@ public class BankAccountDTO {
     @NotBlank(message = "Field 'bankAccountName': {notblank}", groups = { OnCreate.class })
     private String bankAccountName;
 
-    @NotNull(message = "Field 'bankId': {notnull}", groups = { OnCreate.class })
-    private Long bankId;
-
     private String bankName;
 
     private Status status;

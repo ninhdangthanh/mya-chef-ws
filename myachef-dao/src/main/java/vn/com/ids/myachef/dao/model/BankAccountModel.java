@@ -40,8 +40,6 @@ public class BankAccountModel implements Serializable {
 
     private String bankAccountName;
 
-    private Long bankId;
-
     private String bankName;
     
     @Column(name = "created_date")

@@ -45,10 +45,6 @@ public class BankAccountConverter {
             bankAccountModel.setBankAccountName(bankAccountDTO.getBankAccountName());
         }
 
-        if (bankAccountDTO.getBankId() != null) {
-            bankAccountModel.setBankId(bankAccountDTO.getBankId());
-        }
-
         if (StringUtils.hasText(bankAccountDTO.getBankName())) {
             bankAccountModel.setBankName(bankAccountDTO.getBankName());
         }

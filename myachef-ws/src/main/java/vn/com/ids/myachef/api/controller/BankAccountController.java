@@ -40,10 +40,10 @@ public class BankAccountController {
     private BankAccountConverter bankAccountConverter;
 
     @Operation(summary = "Find all by status")
-    @GetMapping("/status")
-    public List<BankAccountDTO> findAllByStatus(@RequestParam Status status) {
+    @GetMapping
+    public List<BankAccountDTO> findAllByStatus() {
         log.info("------------------ Find all by status - START ----------------");
-        return bankAccountService.findAllByStatus(status);
+        return bankAccountService.findAllByStatus(Status.ACTIVE);
     }
 
     @Operation(summary = "Find by id")
@@ -79,12 +79,9 @@ public class BankAccountController {
 
     @Operation(summary = "Delete")
     @DeleteMapping
-    public void delete(@RequestParam List<Long> ids) {
-        log.info("ids: {}", ids);
-        if (!CollectionUtils.isEmpty(ids)) {
-            bankAccountService.deleteByIds(ids);
-        }
-
+    public void delete(@RequestParam Long id) {
+        log.info("ids: {}", id);
+        bankAccountService.deleteById(id);
         log.info("------------------ Delete - END ----------------");
     }
 }
