@@ -38,7 +38,7 @@ public class DinnerTableModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private String tableNumber;
+    private String tableName;
     
     private Boolean enoughtFood = false;
     

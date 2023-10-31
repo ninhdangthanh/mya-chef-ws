@@ -65,8 +65,8 @@ public class DinnerTableConverter {
 //    }
 
     public void mapDataToUpdate(DinnerTableModel model, DinnerTableDTO dto) {
-        if (StringUtils.hasText(dto.getTableNumber())) {
-            model.setTableNumber(dto.getTableNumber());
+        if (StringUtils.hasText(dto.getTableName())) {
+            model.setTableName(dto.getTableName());
         }
         if (dto.getStatus() != null) {
             model.setStatus(dto.getStatus());

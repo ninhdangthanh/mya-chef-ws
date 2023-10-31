@@ -15,6 +15,7 @@ import vn.com.ids.myachef.business.dto.DinnerTableDTO;
 import vn.com.ids.myachef.business.dto.DishDTO;
 import vn.com.ids.myachef.business.service.DinnerTableService;
 import vn.com.ids.myachef.business.service.OrderService;
+import vn.com.ids.myachef.dao.enums.Status;
 import vn.com.ids.myachef.dao.model.DinnerTableModel;
 import vn.com.ids.myachef.dao.model.DishModel;
 import vn.com.ids.myachef.dao.model.OrderDetailModel;
@@ -44,6 +45,7 @@ public class DinnerTableServiceImpl extends AbstractService<DinnerTableModel, Lo
     @Override
     public DinnerTableDTO create(@Valid DinnerTableDTO dinnerTableDTO) {
         DinnerTableModel dinnerTableModel = dinnerTableConverter.toBasicModel(dinnerTableDTO);
+        dinnerTableModel.setStatus(Status.ACTIVE);
         dinnerTableModel = save(dinnerTableModel);
         return dinnerTableConverter.toBasicDTO(dinnerTableModel);
     }
