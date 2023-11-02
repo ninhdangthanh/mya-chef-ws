@@ -49,6 +49,8 @@ public class UserDTO {
     private UserRole role;
 
     private String avatarFile;
+    
+    private String newPassword;
 
     private LocalDate birthday;
 

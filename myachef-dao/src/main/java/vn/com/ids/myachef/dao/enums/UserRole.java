@@ -1,5 +1,5 @@
 package vn.com.ids.myachef.dao.enums;
 
 public enum UserRole {
-    ADMIN, USER
+    ADMIN, USER, WAITER, CHEF
 }
